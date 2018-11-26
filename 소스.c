@@ -126,7 +126,7 @@ void board_maker()
 		}
 	}
 }
-void drawTree()
+void drawTree(int x, int y, int z)
 {
 
 	// ¿Ÿ
@@ -134,29 +134,28 @@ void drawTree()
 	for (int i = 0;i < 4;i++) {
 		glPushMatrix();
 		glColor3f(0.1f, 0.3f + i * 0.1, 0.3f);
-		glTranslatef(-250, 120.0 + i * 20, 150.0);
+		glTranslatef(x, y + i * 20, z);
 		glScalef(2.5 - i * 0.5, 1, 2.5 - i * 0.5);
 		glutSolidCube(20);
 		glPopMatrix();
 	}
 
-
 	// ¡∂∏Ì
 
 	glPushMatrix();
 	glColor3f(1.0f, 0.2f, 0.2f);
-	glTranslatef(-250, 200, 150);
+	glTranslatef(x, y+80, z);
 	glutSolidSphere(8.0, 50, 24);
 	glPopMatrix();
+
 
 	// ±‚µ’
 	glPushMatrix();
 	glColor3f(0.5f, 0.3f, 0.3f);
-	glTranslatef(-250.0, 10.0, 150.0);
+	glTranslatef(x, y-110, z);
 	glScalef(1.0, 10.0, 1.0);	// y√‡¿∏∑Œ 12πË
 	glutSolidCube(20);
 	glPopMatrix();
-
 
 }
 
@@ -184,13 +183,19 @@ void TimerFunction(int value)
 void drawScene()
 {
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.0f, 1.0f, 1.0f, 0.0f);
+	glClearColor(0.0f, 0.6f, 1.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	Loadfile();
 	board_maker();
 	snow();//¥´
-	drawTree();
+
+	// ≥™π´
+	drawTree(-280,120,-220);
+	drawTree(160, 120, -120);
+	drawTree(250, 120, 300);
+	drawTree(-150, 120, 220);
+
 	glutSwapBuffers();
 }
 
