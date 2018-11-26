@@ -130,55 +130,36 @@ void drawTree()
 {
 
 	// ¿Ÿ
-	glPushMatrix();
-	glColor3f(0.1f, 0.5f, 0.3f);
-	glTranslatef(-250.0, 100.0, 150.0);
-	glRotatef(90, 0.0, 1.0, 0.0);
-	glScalef(1.0, 4.0, 2.0);
-	glutSolidCube(20);
-	glPopMatrix();
+
+	for (int i = 0;i < 4;i++) {
+		glPushMatrix();
+		glColor3f(0.1f, 0.3f + i * 0.1, 0.3f);
+		glTranslatef(-250, 120.0 + i * 20, 150.0);
+		glScalef(2.5 - i * 0.5, 1, 2.5 - i * 0.5);
+		glutSolidCube(20);
+		glPopMatrix();
+	}
+
+
+	// ¡∂∏Ì
 
 	glPushMatrix();
-	glColor3f(0.1f, 0.4f, 0.3f);
-	glTranslatef(-250.0, 100.0, 170.0);
-	glRotatef(90, 0.0, 1.0, 0.0);
-	glScalef(1.0, 4.0, 2.0);
-	glutSolidCube(20);
+	glColor3f(1.0f, 0.2f, 0.2f);
+	glTranslatef(-250, 200, 150);
+	glutSolidSphere(8.0, 50, 24);
 	glPopMatrix();
 
-	glPushMatrix();
-	glColor3f(0.1f, 0.4f, 0.3f);
-	glTranslatef(-250.0, 100.0, 130.0);
-	glRotatef(90, 0.0, 1.0, 0.0);
-	glScalef(1.0, 4.0, 2.0);
-	glutSolidCube(20);
-	glPopMatrix();
-
-	glPushMatrix();
-	glColor3f(0.1f, 0.5f, 0.3f);
-	glTranslatef(-250.0, 100.0, 110.0);
-	glRotatef(90, 0.0, 1.0, 0.0);
-	glScalef(1.0,3.0, 1.0);
-	glutSolidCube(20);
-	glPopMatrix();
-
-	glPushMatrix();
-	glColor3f(0.1f, 0.5f, 0.3f);
-	glTranslatef(-250.0, 100.0, 190.0);
-	glRotatef(90, 0.0, 1.0, 0.0);
-	glScalef(1.0, 3.0, 1.0);
-	glutSolidCube(20);
-	glPopMatrix();
-	
 	// ±‚µ’
 	glPushMatrix();
 	glColor3f(0.5f, 0.3f, 0.3f);
 	glTranslatef(-250.0, 10.0, 150.0);
-	glScalef(1.0, 10.0, 1.0);
+	glScalef(1.0, 10.0, 1.0);	// y√‡¿∏∑Œ 12πË
 	glutSolidCube(20);
 	glPopMatrix();
 
+
 }
+
 GLvoid Reshape(int w, int h)
 {
 	glViewport(0, 0, w, h);
