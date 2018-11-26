@@ -82,7 +82,7 @@ void board_maker()
 	{
 		for (int j = 0; j < 80; j++)
 		{
-			if (makeboard[i][j] == 0)
+			if (makeboard[i][j] == 0)//´«
 			{
 				glPushMatrix();
 				{
@@ -93,7 +93,7 @@ void board_maker()
 				glPopMatrix();
 			}
 
-			else if (makeboard[i][j] == 1)
+			else if (makeboard[i][j] == 1)//¶¥
 			{
 				glPushMatrix();
 				{
@@ -103,7 +103,7 @@ void board_maker()
 				}
 				glPopMatrix();
 			}
-			else if (makeboard[i][j] == 2)
+			else if (makeboard[i][j] == 2)//°­
 			{
 				glPushMatrix();
 				{
@@ -113,7 +113,7 @@ void board_maker()
 				}
 				glPopMatrix();
 			}
-			else if (makeboard[i][j] == 3)
+			else if (makeboard[i][j] == 3)//´Ù¸®
 			{
 				glPushMatrix();
 				{
@@ -126,7 +126,7 @@ void board_maker()
 		}
 	}
 }
-void drawTree(int x, int y, int z)
+void drawTree(float Tx, float Ty, float Tz)
 {
 
 	// ÀÙ
@@ -134,7 +134,7 @@ void drawTree(int x, int y, int z)
 	for (int i = 0;i < 4;i++) {
 		glPushMatrix();
 		glColor3f(0.1f, 0.3f + i * 0.1, 0.3f);
-		glTranslatef(x, y + i * 20, z);
+		glTranslatef(Tx, Ty + i * 20, Tz);
 		glScalef(2.5 - i * 0.5, 1, 2.5 - i * 0.5);
 		glutSolidCube(20);
 		glPopMatrix();
@@ -144,7 +144,7 @@ void drawTree(int x, int y, int z)
 
 	glPushMatrix();
 	glColor3f(1.0f, 0.2f, 0.2f);
-	glTranslatef(x, y+80, z);
+	glTranslatef(Tx, Ty+80, Tz);
 	glutSolidSphere(8.0, 50, 24);
 	glPopMatrix();
 
@@ -152,11 +152,140 @@ void drawTree(int x, int y, int z)
 	// ±âµÕ
 	glPushMatrix();
 	glColor3f(0.5f, 0.3f, 0.3f);
-	glTranslatef(x, y-110, z);
+	glTranslatef(Tx, Ty-110, Tz);
 	glScalef(1.0, 10.0, 1.0);	// yÃàÀ¸·Î 12¹è
 	glutSolidCube(20);
 	glPopMatrix();
 
+}
+
+void drawStone(float Sx, float Sy, float Sz, float Ssize)//µ¹
+{
+	glPushMatrix();
+	
+	glTranslatef(Sx, Sy, Sz);
+	glColor3f(0.5f, 0.5f, 0.5f);
+	glutSolidCube(15+Ssize);
+
+	glTranslatef(0.0, 0.0+10.0+Ssize, 0.0);	
+	glColor3f(0.4f, 0.4f, 0.4f);
+	glutSolidCube(10+Ssize);
+
+	glTranslatef(0.0, 0.0-10.0, 0.0+10.0+Ssize);
+	glColor3f(0.55f, 0.55f, 0.55f);
+	glutSolidCube(8+Ssize);
+
+	glPopMatrix();
+}
+
+void character()//Ä³¸¯ÅÍ
+{
+	glPushMatrix();
+	{
+		glPushMatrix();//¿À¸¥ÂÊ ¹ß,´Ù¸®
+		{
+			glPushMatrix();//¹ß
+			glTranslatef(150.0, 10.0, 300.0);
+			glScalef(1.0, 1.3, 2.0);
+			glColor3f(0.9f, 0.3f, 0.3f);
+			glutSolidCube(5);
+			glPopMatrix();
+
+			glPushMatrix();//¾ç¸»
+			glTranslatef(150.0, 13.0, 297.0);
+			glScalef(1.0, 5.0, 1.0);
+			glColor3f(1.0f, 0.9f, 0.9f);
+			glutSolidCube(4.5);
+			glPopMatrix();
+
+			glPushMatrix();//´Ù¸®
+			glTranslatef(150.0, 10.0, 297.0);
+			glScalef(1.0, 20.0, 1.0);
+			glColor3f(0.9f, 0.8f, 0.7f);
+			glutSolidCube(4);
+			glPopMatrix();
+			
+
+		}
+		glPopMatrix();
+
+		glPushMatrix();//¿ÞÂÊ ¹ß,´Ù¸®
+		{
+			glPushMatrix();//¹ß
+			glTranslatef(160.0, 10.0, 300.0);
+			glScalef(1.0, 1.3, 2.0);
+			glColor3f(0.9f, 0.3f, 0.3f);
+			glutSolidCube(5);
+			glPopMatrix();
+
+			glPushMatrix();//¾ç¸»
+			glTranslatef(160.0, 13.0, 297.0);
+			glScalef(1.0, 5.0, 1.0);
+			glColor3f(1.0f, 0.9f, 0.9f);
+			glutSolidCube(4.5);
+			glPopMatrix();
+
+			glPushMatrix();//´Ù¸®
+			glTranslatef(160.0, 10.0, 297.0);
+			glScalef(1.0, 20.0, 1.0);
+			glColor3f(0.9f, 0.8f, 0.7f);
+			glutSolidCube(4);
+			glPopMatrix();
+		}
+		glPopMatrix();
+		
+		glPushMatrix();//¸öÅë
+		glTranslatef(155.0, 40.0, 300);
+		glScalef(1.0, 3.0, 1.0);
+		glRotated(-90, 1, 0, 0);
+		glColor3f(0.9f, 0.3f, 0.3f);
+		glutSolidCone(15, 20, 20, 20);
+		glPopMatrix();
+
+		glPushMatrix();//¾ó±¼
+		glTranslatef(155.0, 87.0, 300);
+		glColor3f(0.9f, 0.8f, 0.7f);
+		glutSolidSphere(12, 20, 20);
+		glPopMatrix();
+
+		glPushMatrix();//¿À¸¥ÂÊ ÆÈ
+		{
+			glPushMatrix();//¾î±ú
+			glTranslatef(145.0, 70.0, 300);
+			glColor3f(0.9f, 0.9f, 0.3f);
+			glutSolidSphere(4, 15, 15);
+			glPopMatrix();
+
+			glPushMatrix();//ÆÈ
+			glTranslatef(145.0, 45.0, 300);
+			glScalef(1.0, 10.0, 1.0);
+			glRotated(45, 0, 0, 1);
+			glColor3f(0.9f, 0.8f, 0.7f);			
+			glutSolidCube(4);
+			glPopMatrix();
+
+			glPushMatrix();//¼Õ
+			glPopMatrix();
+		}
+		glPopMatrix();
+
+		glPushMatrix();//¿ÞÂÊ ÆÈ
+		{
+			glPushMatrix();//¾î±ú
+			glTranslatef(165.0, 70.0, 300);
+			glColor3f(0.9f, 0.9f, 0.3f);
+			glutSolidSphere(4, 15, 15);
+			glPopMatrix();
+
+			glPushMatrix();//ÆÈ
+			glPopMatrix();
+
+			glPushMatrix();//¼Õ
+			glPopMatrix();
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
 }
 
 GLvoid Reshape(int w, int h)
@@ -191,13 +320,24 @@ void drawScene()
 	snow();//´«
 
 	// ³ª¹«
-	drawTree(-280,120,-220);
-	drawTree(160, 120, -120);
-	drawTree(250, 120, 300);
-	drawTree(-150, 120, 220);
+	drawTree(-280.0,120.0,-220.0);
+	drawTree(160.0, 120.0, -120.0);
+	drawTree(250.0, 120.0, 300.0);
+	drawTree(-150.0, 120.0, 220.0);
+
+	//µ¹
+	drawStone(-200.0, 10.0, -300.0, 7);
+	drawStone(-300.0, 10.0, 300.0, 0);
+	drawStone(300.0, 10.0, 100.0, 7);
+	drawStone(150.0, 10.0, 350.0, 0);
+
+	//Ä³¸¯ÅÍ
+	character();
 
 	glutSwapBuffers();
 }
+
+
 
 
 
