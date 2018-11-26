@@ -97,7 +97,7 @@ void board_maker()
 			{
 				glPushMatrix();
 				{
-					glColor3f(0.0f, 1.0f, 1.0f);
+					glColor3f(0.7f, 0.5f, 0.3f);
 					glTranslatef(-400.0 + 10 * j, 0.0, -400.0 + 10 * i);
 					glutSolidCube(10);
 				}
@@ -117,7 +117,7 @@ void board_maker()
 			{
 				glPushMatrix();
 				{
-					glColor3f(0.0f, 0.0f, 0.0f);
+					glColor3f(0.4f, 0.2f, 0.1f);
 					glTranslatef(-400.0 + 10 * j, 0.0, -400.0 + 10 * i);
 					glutSolidCube(10);
 				}
@@ -126,7 +126,6 @@ void board_maker()
 		}
 	}
 }
-
 void drawTree()
 {
 
