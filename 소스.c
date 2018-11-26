@@ -7,7 +7,7 @@
 int snowNumber = 0;
 float snowObejct[200][3];
 int makeboard[80][80];
-
+float xRotation = 0.0f, yRotation = 0.0f, zRotation = 0.0f;//로테이션
 void SetupRC()//초기화
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // clear 색상을 검정색으로 설정
@@ -204,7 +204,7 @@ void character()//캐릭터
 			glColor3f(0.9f, 0.8f, 0.7f);
 			glutSolidCube(4);
 			glPopMatrix();
-			
+
 
 		}
 		glPopMatrix();
@@ -233,7 +233,7 @@ void character()//캐릭터
 			glPopMatrix();
 		}
 		glPopMatrix();
-		
+
 		glPushMatrix();//몸통
 		glTranslatef(155.0, 40.0, 300);
 		glScalef(1.0, 3.0, 1.0);
@@ -260,7 +260,7 @@ void character()//캐릭터
 			glTranslatef(145.0, 45.0, 300);
 			glScalef(1.0, 10.0, 1.0);
 			glRotated(45, 0, 0, 1);
-			glColor3f(0.9f, 0.8f, 0.7f);			
+			glColor3f(0.9f, 0.8f, 0.7f);
 			glutSolidCube(4);
 			glPopMatrix();
 
@@ -278,6 +278,11 @@ void character()//캐릭터
 			glPopMatrix();
 
 			glPushMatrix();//팔
+			glTranslatef(165.0, 45.0, 300);
+			glScalef(1.0, 10.0, 1.0);
+			glRotated(-45, 0, 0, 1);
+			glColor3f(0.9f, 0.8f, 0.7f);
+			glutSolidCube(4);
 			glPopMatrix();
 
 			glPushMatrix();//손
@@ -314,7 +319,11 @@ void drawScene()
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.6f, 1.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	
+	glPushMatrix();
+	glRotated(xRotation, 1.0f, 0.0f, 0.0f);
+	glRotated(yRotation, 0.0f, 1.0f, 0.0f);
+	glRotated(zRotation, 0.0f, 0.0f, 1.0f);
 	Loadfile();
 	board_maker();
 	snow();//눈
@@ -334,6 +343,7 @@ void drawScene()
 	//캐릭터
 	character();
 
+	glPopMatrix();
 	glutSwapBuffers();
 }
 
@@ -345,7 +355,15 @@ void Keyboard(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-
+	case 'x':
+		xRotation += 3.0f;
+		break;
+	case 'y':
+		yRotation += 3.0f;
+		break;
+	case 'z':
+		zRotation += 3.0f;
+		break;
 	}
 	glutPostRedisplay();
 }
