@@ -130,8 +130,6 @@ void drawTree()
 {
 
 	// ¿Ÿ
-
-
 	glPushMatrix();
 	glColor3f(0.1f, 0.5f, 0.3f);
 	glTranslatef(-250.0, 100.0, 150.0);
