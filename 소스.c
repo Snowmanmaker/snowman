@@ -8,6 +8,7 @@ int snowNumber = 0;
 float snowObejct[200][3];
 int makeboard[80][80];
 float xRotation = 0.0f, yRotation = 0.0f, zRotation = 0.0f;//로테이션
+float Xmove = 0.0f, Ymove = 0.0f, Zmove = 0.0f;
 void SetupRC()//초기화
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // clear 색상을 검정색으로 설정
@@ -299,7 +300,7 @@ GLvoid Reshape(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(100.0f, w / h, 1.0, 1000.0); // 원근 거리
-	glTranslatef(0.0, -50.0, -600.0);
+	glTranslatef(0.0, -30.0, -600.0);
 	glRotatef(40, 1.0f, 0.0f, 0.0f);
 
 	glMatrixMode(GL_MODELVIEW);
@@ -321,6 +322,7 @@ void drawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glPushMatrix();
+	glTranslatef(Xmove, Ymove, Zmove);
 	glRotated(xRotation, 1.0f, 0.0f, 0.0f);
 	glRotated(yRotation, 0.0f, 1.0f, 0.0f);
 	glRotated(zRotation, 0.0f, 0.0f, 1.0f);
@@ -358,11 +360,39 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'x':
 		xRotation += 3.0f;
 		break;
+	case'X':
+		xRotation -= 3.0f;
 	case 'y':
 		yRotation += 3.0f;
 		break;
+	case'Y':
+		yRotation -= 3.0f;
+		break;
 	case 'z':
 		zRotation += 3.0f;
+		break;
+	case 'Z':
+		zRotation -= 3.0f;
+		break;
+	}
+	glutPostRedisplay();
+}
+
+void KeyboardSpe(int key, int x, int y)//스페셜 키보드
+{
+	switch (key)
+	{
+	case GLUT_KEY_LEFT:
+		Xmove -= 5;
+		break;
+	case GLUT_KEY_UP:
+		Ymove -= 5;
+		break;
+	case GLUT_KEY_RIGHT:
+		Xmove += 5;
+		break;
+	case GLUT_KEY_DOWN:
+		Ymove += 5;
 		break;
 	}
 	glutPostRedisplay();
@@ -377,6 +407,7 @@ void main(int argc, char *argv[])
 	glutInitWindowSize(1200, 700);
 	glutCreateWindow("Hello Snowman");
 	glutKeyboardFunc(Keyboard);
+	glutSpecialFunc(KeyboardSpe);//키보드 스페셜
 	glutDisplayFunc(drawScene);
 	glutTimerFunc(100, TimerFunction, 1);
 	glutReshapeFunc(Reshape);
