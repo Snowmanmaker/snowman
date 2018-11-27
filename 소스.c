@@ -152,8 +152,8 @@ void drawTree(float Tx, float Ty, float Tz)
 	// 기둥
 	glPushMatrix();
 	glColor3f(0.5f, 0.3f, 0.3f);
-	glTranslatef(Tx, Ty-110, Tz);
-	glScalef(1.0, 10.0, 1.0);	// y축으로 12배
+	glTranslatef(Tx, Ty-65, Tz);
+	glScalef(1.0, 5.5, 1.0);	// y축으로 12배
 	glutSolidCube(20);
 	glPopMatrix();
 
