@@ -235,21 +235,21 @@ void character()//캐릭터
 		glPushMatrix();//오른쪽 발,다리
 		{
 			glPushMatrix();//발
-			glTranslatef(150.0, 10.0, 300.0);
+			glTranslatef(-5.0, 10.0, 0.0);
 			glScalef(1.0, 1.3, 2.0);
 			glColor3f(0.9f, 0.3f, 0.3f);
 			glutSolidCube(5);
 			glPopMatrix();
 
 			glPushMatrix();//양말
-			glTranslatef(150.0, 10.0, 297.0);
+			glTranslatef(-5.0, 10.0, -3.0);
 			glScalef(1.0, 5.0, 1.0);
 			glColor3f(1.0f, 0.9f, 0.9f);
 			glutSolidCube(4.5);
 			glPopMatrix();
 
 			glPushMatrix();//다리
-			glTranslatef(150.0, 35.0, 297.0);
+			glTranslatef(-5.0, 35.0, -3.0);
 			glScalef(1.0, 20.0, 1.0);
 			glColor3f(0.9f, 0.8f, 0.7f);
 			glutSolidCube(4);
@@ -262,21 +262,21 @@ void character()//캐릭터
 		glPushMatrix();//왼쪽 발,다리
 		{
 			glPushMatrix();//발
-			glTranslatef(160.0, 10.0, 300.0);
+			glTranslatef(5.0, 10.0, 0.0);
 			glScalef(1.0, 1.3, 2.0);
 			glColor3f(0.9f, 0.3f, 0.3f);
 			glutSolidCube(5);
 			glPopMatrix();
 
 			glPushMatrix();//양말
-			glTranslatef(160.0, 10.0, 297.0);
+			glTranslatef(5.0, 10.0, -3.0);
 			glScalef(1.0, 5.0, 1.0);
 			glColor3f(1.0f, 0.9f, 0.9f);
 			glutSolidCube(4.5);
 			glPopMatrix();
 
 			glPushMatrix();//다리
-			glTranslatef(160.0, 35.0, 297.0);
+			glTranslatef(5.0, 35.0, -3.0);
 			glScalef(1.0, 20.0, 1.0);
 			glColor3f(0.9f, 0.8f, 0.7f);
 			glutSolidCube(4);
@@ -285,7 +285,7 @@ void character()//캐릭터
 		glPopMatrix();
 
 		glPushMatrix();//몸통
-		glTranslatef(155.0, 30.0, 300);
+		glTranslatef(0.0, 30.0, 0);
 		glScalef(1.0, 3.0, 1.0);
 		glRotated(-90, 1, 0, 0);
 		glColor3f(0.9f, 0.3f, 0.3f);
@@ -293,7 +293,7 @@ void character()//캐릭터
 		glPopMatrix();
 
 		glPushMatrix();//얼굴
-		glTranslatef(155.0, 77.0, 300);
+		glTranslatef(0.0, 77.0, 0);
 		glColor3f(0.9f, 0.8f, 0.7f);
 		glutSolidSphere(14, 20, 20);
 		glPopMatrix();
@@ -301,13 +301,13 @@ void character()//캐릭터
 		glPushMatrix();//오른쪽 팔
 		{
 			glPushMatrix();//어깨
-			glTranslatef(146.0, 60.0, 300);
+			glTranslatef(-9.0, 60.0, 0);
 			glColor3f(0.9f, 0.3f, 0.3f);
 			glutSolidSphere(6, 15, 15);
 			glPopMatrix();
 
 			glPushMatrix();//팔
-			glTranslatef(142.0, 45.0, 300);			
+			glTranslatef(-13.0, 45.0, 0);			
 			glRotated(-15, 0, 0, 1);
 			glScalef(1.0, 6.0, 1.0);
 			glColor3f(0.9f, 0.8f, 0.7f);
@@ -315,7 +315,7 @@ void character()//캐릭터
 			glPopMatrix();
 
 			glPushMatrix();//손
-			glTranslatef(141.0, 35.0, 300);
+			glTranslatef(-14.0, 35.0,0);
 			glColor3f(0.9f, 0.8f, 0.7f);
 			glutSolidSphere(5, 15, 15);
 			glPopMatrix();
@@ -325,13 +325,13 @@ void character()//캐릭터
 		glPushMatrix();//왼쪽 팔
 		{
 			glPushMatrix();//어깨
-			glTranslatef(164.0, 60.0, 300);
+			glTranslatef(9.0, 60.0, 0);
 			glColor3f(0.9f, 0.3f, 0.3f);
 			glutSolidSphere(6, 15, 15);
 			glPopMatrix();
 
 			glPushMatrix();//팔
-			glTranslatef(168.0, 45.0, 300);			
+			glTranslatef(13.0, 45.0, 0);			
 			glRotated(15, 0, 0, 1);
 			glScalef(1.0, 6.0, 1.0);
 			glColor3f(0.9f, 0.8f, 0.7f);
@@ -339,7 +339,7 @@ void character()//캐릭터
 			glPopMatrix();
 
 			glPushMatrix();//손
-			glTranslatef(169.0, 35.0, 300);
+			glTranslatef(14.0, 35.0, 0);
 			glColor3f(0.9f, 0.8f, 0.7f);
 			glutSolidSphere(5, 15, 15);
 			glPopMatrix();
@@ -347,7 +347,7 @@ void character()//캐릭터
 		glPopMatrix();
 
 		glPushMatrix();//모자
-		glTranslatef(155.0, 83.0, 297);
+		glTranslatef(0.0, 83.0, -3);
 		glRotated(-120, 1, 0, 0);
 		glScalef(1.0, 1.0, 2.0);	
 		glColor3f(0.9f, 0.3f, 0.3f);
@@ -355,7 +355,7 @@ void character()//캐릭터
 		glPopMatrix();
 
 		glPushMatrix();//모자 방울
-		glTranslatef(155.0, 115.0, 278);
+		glTranslatef(0.0, 115.0, -20);
 		glColor3f(1.0f, 0.9f, 0.9f);
 		glutSolidSphere(5, 20, 20);
 		glPopMatrix();
