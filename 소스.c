@@ -9,6 +9,55 @@ float snowObejct[200][3];
 int makeboard[80][80];
 float xRotation = 0.0f, yRotation = 0.0f, zRotation = 0.0f;//로테이션
 float Xmove = 0.0f, Ymove = 0.0f, Zmove = 0.0f;
+
+typedef struct makeSnow
+{
+	float snowX;
+	float snowZ;
+};
+struct makeSnow makesnow[10];
+
+void snowballrand()
+{
+	
+	srand((unsigned)time(NULL));
+	int k = 0;
+	int sx = 0;
+	int sz = 0;
+	while (k != 10)
+	{
+		sx = (((rand() % 80) - 40) * 10);
+		sz = (((rand() % 80) - 40) * 10);
+		printf("sx : %d sz : %d\n", sx, sz);
+		for (int i = 0; i < 80; i++)
+		{
+			for (int j = 0; j < 80; j++)
+			{
+				if (sx == -400 + 10 * j && sz == -400 + 10 * i && makeboard[i][j] != 2)
+				{
+					makesnow[k].snowX = (float)sx;
+					makesnow[k].snowZ = (float)sz;
+					printf("%d\n", makeboard[i][j]);
+					k++;
+				}
+			}
+		}
+	}
+	
+}
+
+void snowball()
+{
+	for (int k = 0; k < 10; k++)
+	{
+		glPushMatrix();
+		glTranslated(makesnow[k].snowX, 10, makesnow[k].snowZ);
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glutSolidSphere(15, 20, 20);
+		glPopMatrix();
+	}
+}
+
 void SetupRC()//초기화
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // clear 색상을 검정색으로 설정
@@ -365,6 +414,8 @@ void drawScene()
 	//캐릭터
 	character();
 
+	snowball();
+
 	glPopMatrix();
 	glutSwapBuffers();
 }
@@ -421,7 +472,8 @@ void KeyboardSpe(int key, int x, int y)//스페셜 키보드
 
 void main(int argc, char *argv[])
 {
-
+	Loadfile();
+	snowballrand();
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(300, 100);
