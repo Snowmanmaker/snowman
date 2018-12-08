@@ -17,26 +17,63 @@ float RightArm = 0;
 float Leg = 0;
 int count = 0;
 int look = 0;
-
 int p = 1;
 int r = 1;
 int q = 0;
-
-
+int t = 0;//space bar
 
 BOOL move = FALSE;
 BOOL makeSnow = FALSE;
 BOOL camera = FALSE;
+BOOL light = TRUE;
+float ambientL = 0.6f;
+float diffuseL = 0.2f;
+float specularL = 0.6f;
 
 typedef struct makeSnow
 {
-	float snowX;
-	float snowY;
-	float snowZ;
-	float snowSize;
+	float x;
+	float y;
+	float z;
+	float size;
 };
 
-struct makeSnow makesnow[8];
+struct makeSnow Snow[8];
+
+
+void Light()
+{
+	GLfloat AmbientLight[] = { ambientL, ambientL, ambientL, ambientL };//주변 조명
+	GLfloat DiffuseLight[] = { diffuseL, diffuseL, diffuseL, diffuseL };//산란 반사 조명
+	GLfloat SpecularLight[] = { specularL, specularL, specularL, specularL };//거울반사 조명
+	GLfloat lightPos[] = { 230, 440, 300, 1 };
+	GLfloat specref[] = { 1,1,1,1 };
+	glEnable(GL_LIGHTING);
+
+	glLightfv(GL_LIGHT0, GL_AMBIENT, AmbientLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, DiffuseLight);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, SpecularLight);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specref);
+	glMateriali(GL_FRONT, GL_SHININESS, 64);
+
+	if (light == TRUE)
+	{
+		glPushMatrix();
+		{
+			glColor3f(4, 4, 0);
+			glTranslatef(lightPos[0], lightPos[1], lightPos[2]);
+			glutSolidSphere(10, 50, 50);
+		}
+		glPopMatrix();
+
+		glEnable(GL_LIGHT0);
+		glEnable(GL_COLOR_MATERIAL);
+	}
+}
 
 void snowballrand()
 {
@@ -49,16 +86,14 @@ void snowballrand()
 	{
 		sx = (((rand() % 80) - 40) * 10);
 		sz = (((rand() % 80) - 40) * 10);
-		printf("sx : %d sz : %d\n", sx, sz);
 		for (int i = 0; i < 80; i++)
 		{
 			for (int j = 0; j < 80; j++)
 			{
 				if (sx == -400 + 10 * j && sz == -400 + 10 * i && makeboard[i][j] != 2)
 				{
-					makesnow[k].snowX = (float)sx;
-					makesnow[k].snowZ = (float)sz;
-					printf("%d\n", makeboard[i][j]);
+					Snow[k].x = (float)sx;
+					Snow[k].z = (float)sz;
 					k++;
 				}
 			}
@@ -72,9 +107,9 @@ void snowball()
 	for (int k = 0; k < 8; k++)
 	{
 		glPushMatrix();
-		glTranslated(makesnow[k].snowX, makesnow[k].snowY + 15, makesnow[k].snowZ);
+		glTranslated(Snow[k].x, 15 + Snow[k].y, Snow[k].z);
 		glColor3f(0.9f, 0.9f, 1.0f);
-		glutSolidSphere(10, 20, 20);
+		glutSolidSphere(10 + Snow[k].size, 20, 20);
 		glPopMatrix();
 	}
 }
@@ -91,22 +126,65 @@ void SetupRC()//초기화
 	}
 }
 
-void checkSnow()
+
+void checkSnow(float i, float j, int k)
+{
+	int x = (int)(j + 400) / 10;
+	int z = (int)(i + 400) / 10;
+	if (makeboard[x][z] == 0) {
+		if (Snow[k].size <= 40) {
+			Snow[k].size += 0.1;
+
+		}
+	}
+	if (makeboard[x][z] == 1) {
+		Snow[k].size -= 0.1;
+	}
+	if (makeboard[x][z] == 2) {
+		Snow[k].size = -10;
+	}
+
+}
+
+
+void followSnow()
 {
 	for (int k = 0; k < 8; k++)
 	{
-		if (makesnow[k].snowX - 20.0 <= xPos && makesnow[k].snowX + 20.0 >= xPos && makesnow[k].snowZ - 20.0 <= zPos && makesnow[k].snowZ + 20.0 >= zPos)
+		if (Snow[k].x - 30.0 - Snow[k].size <= xPos && Snow[k].x + 30.0 + Snow[k].size >= xPos && Snow[k].z - 30.0 - Snow[k].size <= zPos && Snow[k].z + 30.0 + Snow[k].size >= zPos)
 		{
 
 			if (makeSnow == TRUE)
 			{
-				makesnow[k].snowX = xPos;
-				makesnow[k].snowZ = zPos + 10;
+
+				if (direct == 1)
+				{
+					Snow[k].x = xPos;
+					Snow[k].z = zPos - 24 - Snow[k].size;
+				}
+				else if (direct == 2)
+				{
+					Snow[k].x = xPos + 24 + Snow[k].size;
+					Snow[k].z = zPos;
+				}
+				else if (direct == 3)
+				{
+					Snow[k].x = xPos - 24 - Snow[k].size;
+					Snow[k].z = zPos;
+				}
+				else if (direct == 0)
+				{
+					Snow[k].x = xPos;
+					Snow[k].z = zPos + 24 + Snow[k].size;
+				}
+				checkSnow(Snow[k].x, Snow[k].z, k);
 			}
 		}
-
 	}
 }
+
+
+
 
 void snow()
 {
@@ -214,12 +292,13 @@ void board_maker()
 		}
 	}
 }
+
 void drawTree(float Tx, float Ty, float Tz)
 {
 
 	// 잎
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0;i < 4;i++) {
 		glPushMatrix();
 		glColor3f(0.1f, 0.3f + i * 0.1, 0.3f);
 		glTranslatef(Tx, Ty + i * 20, Tz);
@@ -270,7 +349,6 @@ void character()//캐릭터
 {
 	glPushMatrix();
 	{
-
 		glTranslatef(xPos, 0, zPos);
 		if (direct == 2) {
 			glRotatef(90, 0, 1, 0);
@@ -489,7 +567,6 @@ GLvoid Reshape(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(100.0f, w / h, 1.0, 1000.0); // 원근 거리
-	
 	if (camera == FALSE) {
 		glTranslatef(0.0, -30.0, -600.0);
 	}
@@ -499,7 +576,6 @@ GLvoid Reshape(int w, int h)
 
 	glRotatef(40, 1.0f, 0.0f, 0.0f);
 
-
 	glMatrixMode(GL_MODELVIEW);
 
 }
@@ -507,7 +583,6 @@ GLvoid Reshape(int w, int h)
 void TimerFunction(int value)
 {
 	drop();
-
 	if (move == TRUE) {
 		shake();
 
@@ -526,7 +601,7 @@ void TimerFunction(int value)
 
 	}
 	glutPostRedisplay();
-	glutTimerFunc(80, TimerFunction, 1);
+	glutTimerFunc(100, TimerFunction, 1);
 }
 
 
@@ -535,14 +610,12 @@ void drawScene()
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.6f, 1.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	glPushMatrix();
 
 	if (camera == TRUE) {
 		gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0); // 카메라위치
 		glTranslatef(-xPos, 0, -zPos);
 	}
-
 
 	glPushMatrix();
 	glTranslatef(Xmove, Ymove, Zmove);
@@ -552,7 +625,6 @@ void drawScene()
 	Loadfile();
 	board_maker();
 	snow();//눈
-
 	// 나무
 	drawTree(-280.0, 120.0, -220.0);
 	drawTree(160.0, 120.0, -120.0);
@@ -567,10 +639,10 @@ void drawScene()
 
 	//캐릭터
 	character();
-	//   characterRotate();
 	snowball();
+	followSnow();
 
-	checkSnow();
+	Light();
 	glPopMatrix();
 	glPopMatrix();
 
@@ -619,7 +691,6 @@ void Keyboard(unsigned char key, int x, int y)
 		if (count % 2 == 1) {
 			makeSnow = FALSE;
 		}
-
 		break;
 	}
 	count++;
@@ -631,7 +702,6 @@ void Keyboard(unsigned char key, int x, int y)
 		look = 0;
 	}
 	Reshape(1200, 700);
-
 	glutPostRedisplay();
 }
 
@@ -643,25 +713,26 @@ void KeyboardSpe(int key, int x, int y)//스페셜 키보드
 		move = TRUE;
 		direct = 3;
 		xPos -= 1.5;
-		
+
 		break;
+
 	case GLUT_KEY_UP:
 		move = TRUE;
 		direct = 1;
 		zPos -= 1.5;
-		
+
 		break;
 	case GLUT_KEY_RIGHT:
 		move = TRUE;
 		direct = 2;
 		xPos += 1.5;
-		
+
 		break;
 	case GLUT_KEY_DOWN:
 		move = TRUE;
 		direct = 0;
 		zPos += 1.5;
-		
+
 		break;
 
 	}
