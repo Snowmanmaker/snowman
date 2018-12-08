@@ -21,7 +21,8 @@ int p = 1;
 int r = 1;
 int q = 0;
 int t = 0;//space bar
-
+int u = 0;
+int kk = 0;
 BOOL move = FALSE;
 BOOL makeSnow = FALSE;
 BOOL camera = FALSE;
@@ -134,14 +135,38 @@ void checkSnow(float i, float j, int k)
 	if (makeboard[x][z] == 0) {
 		if (Snow[k].size <= 40) {
 			Snow[k].size += 0.1;
-
+			Snow[k].y += 0.05;
 		}
+		
 	}
 	if (makeboard[x][z] == 1) {
 		Snow[k].size -= 0.1;
+		
 	}
 	if (makeboard[x][z] == 2) {
 		Snow[k].size = -10;
+		
+	}
+
+}
+
+void checkRiver()
+{
+	int x = (int)(zPos + 400) / 10;
+	int z = (int)(xPos + 400) / 10;
+	if (makeboard[x][z] == 0) {
+		u = 0;
+	}
+	if (makeboard[x][z] == 1) {
+		u = 0;
+	}
+	if (makeboard[x][z] == 2) {
+		
+		u = 1;
+	}
+	if (makeboard[x][z] == 3) {
+
+		u = 0;
 	}
 
 }
@@ -156,7 +181,7 @@ void followSnow()
 
 			if (makeSnow == TRUE)
 			{
-
+				
 				if (direct == 1)
 				{
 					Snow[k].x = xPos;
@@ -641,7 +666,7 @@ void drawScene()
 	character();
 	snowball();
 	followSnow();
-
+	checkRiver();
 	Light();
 	glPopMatrix();
 	glPopMatrix();
@@ -712,27 +737,80 @@ void KeyboardSpe(int key, int x, int y)//스페셜 키보드
 	case GLUT_KEY_LEFT:
 		move = TRUE;
 		direct = 3;
-		xPos -= 1.5;
-
+		if ((-290 < xPos&&-270 > xPos&&-230 < zPos&&-210 > zPos) ||
+			(150 < xPos&&170 > xPos&&-130 < zPos&&-110 > zPos)||
+			(240 < xPos&&260 > xPos&&290 < zPos&&310 > zPos)||
+			(-160 < xPos&&-140 > xPos&&210 < zPos&&230 > zPos)||
+			(-210 < xPos&&-190 > xPos&&-310 < zPos&&-290 > zPos)||
+			(-310 < xPos&&-290 > xPos&&290 < zPos&&310 > zPos)||
+			(290 < xPos&&310 > xPos&&90 < zPos&&110 > zPos)||
+			(140 < xPos&&160 > xPos&&340 < zPos&&360 > zPos)||u == 1)
+		{
+			xPos += 3;
+		}
+		else
+		{
+			xPos -= 1.5;
+		}
+		
 		break;
 
 	case GLUT_KEY_UP:
 		move = TRUE;
 		direct = 1;
-		zPos -= 1.5;
-
+		if ((-290 < xPos&&-270 > xPos&&-230 < zPos&&-210 > zPos) ||
+			(150 < xPos && 170 > xPos&&-130 < zPos&&-110 > zPos) ||
+			(240 < xPos && 260 > xPos && 290 < zPos && 310 > zPos) ||
+			(-160 < xPos&&-140 > xPos && 210 < zPos && 230 > zPos) ||
+			(-210 < xPos&&-190 > xPos&&-310 < zPos&&-290 > zPos) ||
+			(-310 < xPos&&-290 > xPos && 290 < zPos && 310 > zPos) ||
+			(290 < xPos && 310 > xPos && 90 < zPos && 110 > zPos) ||
+			(140 < xPos && 160 > xPos && 340 < zPos && 360 > zPos)||u==1)
+		{
+			zPos += 3;
+		}
+		else
+		{
+			zPos -= 1.5;
+		}
 		break;
 	case GLUT_KEY_RIGHT:
 		move = TRUE;
 		direct = 2;
-		xPos += 1.5;
-
+		if ((-290 < xPos&&-270 > xPos&&-230 < zPos&&-210 > zPos) ||
+			(150 < xPos && 170 > xPos&&-130 < zPos&&-110 > zPos) ||
+			(240 < xPos && 260 > xPos && 290 < zPos && 310 > zPos) ||
+			(-160 < xPos&&-140 > xPos && 210 < zPos && 230 > zPos) ||
+			(-210 < xPos&&-190 > xPos&&-310 < zPos&&-290 > zPos) ||
+			(-310 < xPos&&-290 > xPos && 290 < zPos && 310 > zPos) ||
+			(290 < xPos && 310 > xPos && 90 < zPos && 110 > zPos) ||
+			(140 < xPos && 160 > xPos && 340 < zPos && 360 > zPos)||u==1)
+		{
+			xPos += -3;
+		}
+		else
+		{
+			xPos += 1.5;
+		}
 		break;
 	case GLUT_KEY_DOWN:
 		move = TRUE;
 		direct = 0;
-		zPos += 1.5;
-
+		if ((-290 < xPos&&-270 > xPos&&-230 < zPos&&-210 > zPos) ||
+			(150 < xPos && 170 > xPos&&-130 < zPos&&-110 > zPos) ||
+			(240 < xPos && 260 > xPos && 290 < zPos && 310 > zPos) ||
+			(-160 < xPos&&-140 > xPos && 210 < zPos && 230 > zPos) ||
+			(-210 < xPos&&-190 > xPos&&-310 < zPos&&-290 > zPos) ||
+			(-310 < xPos&&-290 > xPos && 290 < zPos && 310 > zPos) ||
+			(290 < xPos && 310 > xPos && 90 < zPos && 110 > zPos) ||
+			(140 < xPos && 160 > xPos && 340 < zPos && 360 > zPos)||u==1)
+		{
+			zPos += -3;
+		}
+		else
+		{
+			zPos += 1.5;
+		}
 		break;
 
 	}
