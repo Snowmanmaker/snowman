@@ -20,20 +20,64 @@ int look = 0;
 int p = 1;
 int r = 1;
 int q = 0;
+int t = 0;//space bar
+
 BOOL move = FALSE;
 BOOL makeSnow = FALSE;
 BOOL camera = FALSE;
+BOOL light = TRUE;
+float ambientL = 0.6f;
+float diffuseL =0.2f;
+float specularL = 0.6f;
+
 typedef struct makeSnow
 {
-	float snowX;
-	float snowZ;
+	float x;
+	float y;
+	float z;
+	float size;
 };
 
-struct makeSnow makesnow[8];
+struct makeSnow Snow[8];
+
+
+void Light()
+{
+	GLfloat AmbientLight[] = { ambientL, ambientL, ambientL, ambientL };//주변 조명
+	GLfloat DiffuseLight[] = { diffuseL, diffuseL, diffuseL, diffuseL };//산란 반사 조명
+	GLfloat SpecularLight[] = { specularL, specularL, specularL, specularL };//거울반사 조명
+	GLfloat lightPos[] = {230, 440, 300, 1 };
+	GLfloat specref[] = { 1,1,1,1 };
+	glEnable(GL_LIGHTING);
+
+	glLightfv(GL_LIGHT0, GL_AMBIENT, AmbientLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, DiffuseLight);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, SpecularLight);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specref);
+	glMateriali(GL_FRONT, GL_SHININESS, 64);
+
+	if (light == TRUE)
+	{
+		glPushMatrix();
+		{
+			glColor3f(4, 4, 0);
+			glTranslatef(lightPos[0], lightPos[1], lightPos[2]);
+			glutSolidSphere(10, 50, 50);
+		}
+		glPopMatrix();
+
+		glEnable(GL_LIGHT0);
+		glEnable(GL_COLOR_MATERIAL);
+	}
+}
 
 void snowballrand()
 {
-	
+
 	srand((unsigned)time(NULL));
 	int k = 0;
 	int sx = 0;
@@ -42,22 +86,20 @@ void snowballrand()
 	{
 		sx = (((rand() % 80) - 40) * 10);
 		sz = (((rand() % 80) - 40) * 10);
-		printf("sx : %d sz : %d\n", sx, sz);
 		for (int i = 0; i < 80; i++)
 		{
 			for (int j = 0; j < 80; j++)
 			{
 				if (sx == -400 + 10 * j && sz == -400 + 10 * i && makeboard[i][j] != 2)
 				{
-					makesnow[k].snowX = (float)sx;
-					makesnow[k].snowZ = (float)sz;
-					printf("%d\n", makeboard[i][j]);
+					Snow[k].x = (float)sx;
+					Snow[k].z = (float)sz;
 					k++;
 				}
 			}
 		}
 	}
-	
+
 }
 
 void snowball()
@@ -65,9 +107,9 @@ void snowball()
 	for (int k = 0; k < 8; k++)
 	{
 		glPushMatrix();
-		glTranslated(makesnow[k].snowX, 15, makesnow[k].snowZ);
+		glTranslated(Snow[k].x, 15+Snow[k].y, Snow[k].z);
 		glColor3f(0.9f, 0.9f, 1.0f);
-		glutSolidSphere(10, 20, 20);
+		glutSolidSphere(10 + Snow[k].size, 20, 20);
 		glPopMatrix();
 	}
 }
@@ -83,6 +125,66 @@ void SetupRC()//초기화
 		snowObejct[i][2] = rand() % (500 - (-500) + 1) + (-500);//x값
 	}
 }
+
+
+void checkSnow( float i, float j, int k)
+{
+	int x =(int)(j + 400)/10;
+	int z = (int)(i + 400)/10;
+	if (makeboard[x][z] == 0) {
+		if (Snow[k].size <= 40) {
+			Snow[k].size += 0.1;
+
+		}
+	}
+	if (makeboard[x][z] ==1) {
+		Snow[k].size -= 0.1;
+	}
+	if (makeboard[x][z] == 2) {
+		Snow[k].size = -10;
+	}
+
+}
+
+
+void followSnow()
+{
+	for (int k = 0; k < 8; k++)
+	{
+		if (Snow[k].x - 30.0 - Snow[k].size <= xPos && Snow[k].x + 30.0 + Snow[k].size >= xPos && Snow[k].z - 30.0 - Snow[k].size <= zPos && Snow[k].z + 30.0 + Snow[k].size >= zPos)
+		{
+
+			if (makeSnow == TRUE)
+			{
+
+				if (direct == 1)
+				{
+					Snow[k].x = xPos;
+					Snow[k].z = zPos - 24- Snow[k].size;
+				}
+				else if (direct == 2)
+				{
+					Snow[k].x = xPos + 24+ Snow[k].size;
+					Snow[k].z = zPos;
+				}
+				else if (direct == 3)
+				{
+					Snow[k].x = xPos - 24 - Snow[k].size;
+					Snow[k].z = zPos;
+				}
+				else if (direct == 0)
+				{
+					Snow[k].x = xPos;
+					Snow[k].z = zPos + 24 + Snow[k].size;
+				}
+				checkSnow(Snow[k].x, Snow[k].z, k);
+			}
+		}
+	}
+}
+
+
+
 
 void snow()
 {
@@ -108,7 +210,7 @@ void drop()
 		if (snowObejct[i][1] < -50)
 		{
 			snowObejct[i][0] = rand() % (500 - (-500) + 1) + (-500);//x값
-			snowObejct[i][1] = rand() %500;//y값
+			snowObejct[i][1] = rand() % 500;//y값
 			snowObejct[i][2] = rand() % (500 - (-500) + 1) + (-500);//x값
 			if (snowNumber < 1000)
 				snowNumber++;
@@ -190,6 +292,7 @@ void board_maker()
 		}
 	}
 }
+
 void drawTree(float Tx, float Ty, float Tz)
 {
 
@@ -208,7 +311,7 @@ void drawTree(float Tx, float Ty, float Tz)
 
 	glPushMatrix();
 	glColor3f(1.0f, 0.2f, 0.2f);
-	glTranslatef(Tx, Ty+80, Tz);
+	glTranslatef(Tx, Ty + 80, Tz);
 	glutSolidSphere(8.0, 50, 24);
 	glPopMatrix();
 
@@ -216,8 +319,8 @@ void drawTree(float Tx, float Ty, float Tz)
 	// 기둥
 	glPushMatrix();
 	glColor3f(0.5f, 0.3f, 0.3f);
-	glTranslatef(Tx, Ty-65, Tz);
-	glScalef(1.0, 5.5, 1.0);	// y축으로 12배
+	glTranslatef(Tx, Ty - 65, Tz);
+	glScalef(1.0, 5.5, 1.0);   // y축으로 12배
 	glutSolidCube(20);
 	glPopMatrix();
 
@@ -226,18 +329,18 @@ void drawTree(float Tx, float Ty, float Tz)
 void drawStone(float Sx, float Sy, float Sz, float Ssize)//돌
 {
 	glPushMatrix();
-	
+
 	glTranslatef(Sx, Sy, Sz);
 	glColor3f(0.5f, 0.5f, 0.5f);
-	glutSolidCube(15+Ssize);
+	glutSolidCube(15 + Ssize);
 
-	glTranslatef(0.0, 0.0+10.0+Ssize, 0.0);	
+	glTranslatef(0.0, 0.0 + 10.0 + Ssize, 0.0);
 	glColor3f(0.4f, 0.4f, 0.4f);
-	glutSolidCube(10+Ssize);
+	glutSolidCube(10 + Ssize);
 
-	glTranslatef(0.0, 0.0-10.0, 0.0+10.0+Ssize);
+	glTranslatef(0.0, 0.0 - 10.0, 0.0 + 10.0 + Ssize);
 	glColor3f(0.55f, 0.55f, 0.55f);
-	glutSolidCube(8+Ssize);
+	glutSolidCube(8 + Ssize);
 
 	glPopMatrix();
 }
@@ -246,9 +349,7 @@ void character()//캐릭터
 {
 	glPushMatrix();
 	{
-
 		glTranslatef(xPos, 0, zPos);
-		glTranslatef(0, 0, -55);
 		if (direct == 2) {
 			glRotatef(90, 0, 1, 0);
 		}
@@ -350,9 +451,9 @@ void character()//캐릭터
 			glPopMatrix();
 
 			glPushMatrix();//팔
-			glTranslatef(-13.0, 53.0, 0);		
+			glTranslatef(-13.0, 53.0, 0);
 			glRotated(RightArm, 1, 0, 0);
-			glTranslatef(0.0,-10.0, 0);
+			glTranslatef(0.0, -10.0, 0);
 			glRotated(-15, 0, 0, 1);
 			glScalef(1.0, 4.5, 1.0);
 			glColor3f(0.9f, 0.8f, 0.7f);
@@ -360,7 +461,7 @@ void character()//캐릭터
 			glPopMatrix();
 
 			glPushMatrix();//손
-			glTranslatef(-14.0, 50.0,0);
+			glTranslatef(-14.0, 50.0, 0);
 			glRotated(RightArm, 1, 0, 0);
 			glTranslatef(0.0, -20, 0);
 			glColor3f(0.9f, 0.8f, 0.7f);
@@ -402,7 +503,7 @@ void character()//캐릭터
 		glPushMatrix();//모자
 		glTranslatef(0.0, 81.0, -3);
 		glRotated(-120, 1, 0, 0);
-		glScalef(1.0, 1.0, 2.0);	
+		glScalef(1.0, 1.0, 2.0);
 		glColor3f(0.9f, 0.3f, 0.3f);
 		glutSolidCone(14, 20, 20, 20);
 		glPopMatrix();
@@ -433,7 +534,7 @@ void shake()
 	}
 
 	//오른쪽팔
-	if (RightArm <= 50 && r== 1) {
+	if (RightArm <= 50 && r == 1) {
 		RightArm -= 12.5;
 		if (RightArm == -50) {
 			r = 0;
@@ -446,7 +547,7 @@ void shake()
 		}
 	}
 
-	if (Leg <= 50 && q== 1) {
+	if (Leg <= 50 && q == 1) {
 		Leg += 12.5;
 		if (Leg == 50) {
 			q = 0;
@@ -482,7 +583,6 @@ GLvoid Reshape(int w, int h)
 void TimerFunction(int value)
 {
 	drop();
-
 	if (move == TRUE) {
 		shake();
 
@@ -514,8 +614,9 @@ void drawScene()
 
 	if (camera == TRUE) {
 		gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0); // 카메라위치
-		glTranslatef(-xPos, 0, -zPos);
+	glTranslatef(-xPos, 0, -zPos);
 	}
+
 	glPushMatrix();
 	glTranslatef(Xmove, Ymove, Zmove);
 	glRotated(xRotation, 1.0f, 0.0f, 0.0f);
@@ -524,9 +625,8 @@ void drawScene()
 	Loadfile();
 	board_maker();
 	snow();//눈
-
 	// 나무
-	drawTree(-280.0,120.0,-220.0);
+	drawTree(-280.0, 120.0, -220.0);
 	drawTree(160.0, 120.0, -120.0);
 	drawTree(250.0, 120.0, 300.0);
 	drawTree(-150.0, 120.0, 220.0);
@@ -539,12 +639,13 @@ void drawScene()
 
 	//캐릭터
 	character();
-//	characterRotate();
 	snowball();
+	followSnow();
 
+	Light();
+	glPopMatrix();
 	glPopMatrix();
 
-	glPopMatrix();
 	glutSwapBuffers();
 }
 
@@ -575,7 +676,7 @@ void Keyboard(unsigned char key, int x, int y)
 		zRotation -= 3.0f;
 		break;
 	case 'c':
-		if (look% 2 == 0) {
+		if (look % 2 == 0) {
 			camera = TRUE;
 		}
 		if (look % 2 == 1) {
@@ -611,22 +712,27 @@ void KeyboardSpe(int key, int x, int y)//스페셜 키보드
 	case GLUT_KEY_LEFT:
 		move = TRUE;
 		direct = 3;
-		xPos-=1.5;
+		xPos -= 1.5;
+
 		break;
+
 	case GLUT_KEY_UP:
 		move = TRUE;
 		direct = 1;
-		zPos-=1.5;
+		zPos -= 1.5;
+
 		break;
 	case GLUT_KEY_RIGHT:
 		move = TRUE;
 		direct = 2;
-		xPos+=1.5;
+		xPos += 1.5;
+
 		break;
 	case GLUT_KEY_DOWN:
 		move = TRUE;
 		direct = 0;
 		zPos += 1.5;
+
 		break;
 
 	}
