@@ -16,11 +16,13 @@ float LeftArm = 0;
 float RightArm = 0;
 float Leg = 0;
 int count = 0;
+int look = 0;
 int p = 1;
 int r = 1;
 int q = 0;
 BOOL move = FALSE;
 BOOL makeSnow = FALSE;
+BOOL camera = FALSE;
 typedef struct makeSnow
 {
 	float snowX;
@@ -246,6 +248,7 @@ void character()//캐릭터
 	{
 
 		glTranslatef(xPos, 0, zPos);
+		glTranslatef(0, 0, -55);
 		if (direct == 2) {
 			glRotatef(90, 0, 1, 0);
 		}
@@ -463,7 +466,13 @@ GLvoid Reshape(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(100.0f, w / h, 1.0, 1000.0); // 원근 거리
-	glTranslatef(0.0, -30.0, -600.0);
+	if (camera == FALSE) {
+		glTranslatef(0.0, -30.0, -600.0);
+	}
+	if (camera == TRUE) {
+		glTranslatef(0.0, -80.0, -350.0);
+	}
+
 	glRotatef(40, 1.0f, 0.0f, 0.0f);
 
 	glMatrixMode(GL_MODELVIEW);
@@ -492,7 +501,7 @@ void TimerFunction(int value)
 
 	}
 	glutPostRedisplay();
-	glutTimerFunc(80, TimerFunction, 1);
+	glutTimerFunc(100, TimerFunction, 1);
 }
 
 
@@ -501,7 +510,12 @@ void drawScene()
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.6f, 1.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+	glPushMatrix();
+
+	if (camera == TRUE) {
+		gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0); // 카메라위치
+		glTranslatef(-xPos, 0, -zPos);
+	}
 	glPushMatrix();
 	glTranslatef(Xmove, Ymove, Zmove);
 	glRotated(xRotation, 1.0f, 0.0f, 0.0f);
@@ -527,6 +541,8 @@ void drawScene()
 	character();
 //	characterRotate();
 	snowball();
+
+	glPopMatrix();
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -558,6 +574,15 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'Z':
 		zRotation -= 3.0f;
 		break;
+	case 'c':
+		if (look% 2 == 0) {
+			camera = TRUE;
+		}
+		if (look % 2 == 1) {
+			camera = FALSE;
+		}
+		break;
+
 	case VK_SPACE:
 		if (count % 2 == 0) {
 			makeSnow = TRUE;
@@ -571,6 +596,11 @@ void Keyboard(unsigned char key, int x, int y)
 	if (count == 10) {
 		count = 0;
 	}
+	look++;
+	if (look == 10) {
+		look = 0;
+	}
+	Reshape(1200, 700);
 	glutPostRedisplay();
 }
 
