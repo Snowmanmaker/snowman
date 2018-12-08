@@ -13,7 +13,6 @@ float Xmove = 0.0f, Ymove = 0.0f, Zmove = 0.0f;
 int direct = 0;
 float xPos = 0, zPos = 0;
 float lArL = 0;
-float rAlL = 0;
 int p = 1;
 int q = 0;
 BOOL move = FALSE;
@@ -290,7 +289,7 @@ void character()//캐릭터
 		{
 			glPushMatrix();//발
 			glTranslatef(5.0, 35.0, -1.0);
-			glRotated(rAlL*0.5, 1, 0, 0);
+			glRotated(lArL*(-1)*0.5, 1, 0, 0);
 			glTranslatef(0.0f, -30.0f, 3.0f);
 			glScalef(1.0, 1.3, 2.0);
 			glColor3f(0.9f, 0.3f, 0.3f);
@@ -299,7 +298,7 @@ void character()//캐릭터
 
 			glPushMatrix();//양말
 			glTranslatef(5.0, 33.0, -3.0);
-			glRotated(rAlL*0.5, 1, 0, 0);
+			glRotated(lArL*(-1)*0.5, 1, 0, 0);
 			glTranslatef(0.0f, -20.0f, 3.0f);
 			glScalef(1.0, 2.0, 1.0);
 			glColor3f(1.0f, 0.9f, 0.9f);
@@ -308,7 +307,7 @@ void character()//캐릭터
 
 			glPushMatrix();//다리
 			glTranslatef(5.0, 33.0, -3.0);
-			glRotated(rAlL*0.5, 1, 0, 0);
+			glRotated(lArL*(-1)*0.5, 1, 0, 0);
 			glTranslatef(0.0f, -8.0f, 3.0f);
 			glScalef(1.0, 4.0, 1.0);
 			glColor3f(0.9f, 0.8f, 0.7f);
@@ -336,7 +335,7 @@ void character()//캐릭터
 
 			glPushMatrix();//어깨
 			glTranslatef(-9.0, 58.0, 0);
-			glRotated(rAlL, 1, 0, 0);
+			glRotated(lArL*(-1), 1, 0, 0);
 			glTranslatef(0.0, 0.0, 0);
 			glColor3f(0.9f, 0.3f, 0.3f);
 			glutSolidSphere(6.5, 15, 15);
@@ -344,7 +343,7 @@ void character()//캐릭터
 
 			glPushMatrix();//팔
 			glTranslatef(-13.0, 53.0, 0);		
-			glRotated(rAlL, 1, 0, 0);
+			glRotated(lArL*(-1), 1, 0, 0);
 			glTranslatef(0.0,-10.0, 0);
 			glRotated(-15, 0, 0, 1);
 			glScalef(1.0, 4.5, 1.0);
@@ -354,7 +353,7 @@ void character()//캐릭터
 
 			glPushMatrix();//손
 			glTranslatef(-14.0, 50.0,0);
-			glRotated(rAlL, 1, 0, 0);
+			glRotated(lArL*(-1), 1, 0, 0);
 			glTranslatef(0.0, -20, 0);
 			glColor3f(0.9f, 0.8f, 0.7f);
 			glutSolidSphere(5, 15, 15);
@@ -424,20 +423,6 @@ void shake()
 			p = 1;
 		}
 	}
-
-	//오른쪽 팔 왼쪽다리
-	if (rAlL <= 50 && q == 1) {
-		rAlL += 12.5;
-		if (rAlL == 50) {
-			q = 0;
-		}
-	}
-	if (rAlL <= 50 && q == 0) {
-		rAlL -= 12.5;
-		if (rAlL == -50) {
-			q = 1;
-		}
-	}
 }
 GLvoid Reshape(int w, int h)
 {
@@ -460,11 +445,10 @@ void TimerFunction(int value)
 		shake();
 
 		move = FALSE;
+	}
 
-		}
 	else if (move == FALSE) {
-	rAlL = 0;
-	lArL = 0;
+		lArL = 0;
 	}
 
 	glutPostRedisplay();
