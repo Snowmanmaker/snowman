@@ -12,10 +12,15 @@ float xRotation = 0.0f, yRotation = 0.0f, zRotation = 0.0f;//로테이션
 float Xmove = 0.0f, Ymove = 0.0f, Zmove = 0.0f;
 int direct = 0;
 float xPos = 0, zPos = 0;
-float lArL = 0;
+float LeftArm = 0;
+float RightArm = 0;
+float Leg = 0;
+int count = 0;
 int p = 1;
+int r = 1;
 int q = 0;
 BOOL move = FALSE;
+BOOL makeSnow = FALSE;
 typedef struct makeSnow
 {
 	float snowX;
@@ -58,7 +63,7 @@ void snowball()
 	for (int k = 0; k < 8; k++)
 	{
 		glPushMatrix();
-		glTranslated(makesnow[k].snowX, 13, makesnow[k].snowZ);
+		glTranslated(makesnow[k].snowX, 15, makesnow[k].snowZ);
 		glColor3f(0.9f, 0.9f, 1.0f);
 		glutSolidSphere(10, 20, 20);
 		glPopMatrix();
@@ -255,8 +260,8 @@ void character()//캐릭터
 		{
 
 			glPushMatrix();//발
-			glTranslatef(-5.0, 35.0, -1.0);
-			glRotated(lArL*0.5, 1, 0, 0);
+			glTranslatef(-5.0, 37.0, -1.0);
+			glRotated(Leg*(-1)*0.5, 1, 0, 0);
 			glTranslatef(0.0f, -30.0f, 3.0f);
 			glScalef(1.0, 1.3, 2.0);
 			glColor3f(0.9f, 0.3f, 0.3f);
@@ -264,8 +269,8 @@ void character()//캐릭터
 			glPopMatrix();
 
 			glPushMatrix();//양말
-			glTranslatef(-5.0, 33.0, -3.0);
-			glRotated(lArL*0.5, 1, 0, 0);
+			glTranslatef(-5.0, 35.0, -3.0);
+			glRotated(Leg*(-1)*0.5, 1, 0, 0);
 			glTranslatef(0.0f, -20.0f, 3.0f);
 			glScalef(1.0, 2.0, 1.0);
 			glColor3f(1.0f, 0.9f, 0.9f);
@@ -274,7 +279,7 @@ void character()//캐릭터
 
 			glPushMatrix();//다리
 			glTranslatef(-5.0, 33.0, -3.0);
-			glRotated(lArL*0.5, 1, 0, 0);
+			glRotated(Leg*(-1)*0.5, 1, 0, 0);
 			glTranslatef(0.0f, -8.0f, 3.0f);
 			glScalef(1.0, 4.0, 1.0);
 			glColor3f(0.9f, 0.8f, 0.7f);
@@ -288,8 +293,8 @@ void character()//캐릭터
 		glPushMatrix();//왼쪽 발,다리
 		{
 			glPushMatrix();//발
-			glTranslatef(5.0, 35.0, -1.0);
-			glRotated(lArL*(-1)*0.5, 1, 0, 0);
+			glTranslatef(5.0, 37.0, -1.0);
+			glRotated(Leg*0.5, 1, 0, 0);
 			glTranslatef(0.0f, -30.0f, 3.0f);
 			glScalef(1.0, 1.3, 2.0);
 			glColor3f(0.9f, 0.3f, 0.3f);
@@ -297,8 +302,8 @@ void character()//캐릭터
 			glPopMatrix();
 
 			glPushMatrix();//양말
-			glTranslatef(5.0, 33.0, -3.0);
-			glRotated(lArL*(-1)*0.5, 1, 0, 0);
+			glTranslatef(5.0, 35.0, -3.0);
+			glRotated(Leg*0.5, 1, 0, 0);
 			glTranslatef(0.0f, -20.0f, 3.0f);
 			glScalef(1.0, 2.0, 1.0);
 			glColor3f(1.0f, 0.9f, 0.9f);
@@ -307,7 +312,7 @@ void character()//캐릭터
 
 			glPushMatrix();//다리
 			glTranslatef(5.0, 33.0, -3.0);
-			glRotated(lArL*(-1)*0.5, 1, 0, 0);
+			glRotated(Leg*0.5, 1, 0, 0);
 			glTranslatef(0.0f, -8.0f, 3.0f);
 			glScalef(1.0, 4.0, 1.0);
 			glColor3f(0.9f, 0.8f, 0.7f);
@@ -335,7 +340,7 @@ void character()//캐릭터
 
 			glPushMatrix();//어깨
 			glTranslatef(-9.0, 58.0, 0);
-			glRotated(lArL*(-1), 1, 0, 0);
+			glRotated(RightArm, 1, 0, 0);
 			glTranslatef(0.0, 0.0, 0);
 			glColor3f(0.9f, 0.3f, 0.3f);
 			glutSolidSphere(6.5, 15, 15);
@@ -343,7 +348,7 @@ void character()//캐릭터
 
 			glPushMatrix();//팔
 			glTranslatef(-13.0, 53.0, 0);		
-			glRotated(lArL*(-1), 1, 0, 0);
+			glRotated(RightArm, 1, 0, 0);
 			glTranslatef(0.0,-10.0, 0);
 			glRotated(-15, 0, 0, 1);
 			glScalef(1.0, 4.5, 1.0);
@@ -353,7 +358,7 @@ void character()//캐릭터
 
 			glPushMatrix();//손
 			glTranslatef(-14.0, 50.0,0);
-			glRotated(lArL*(-1), 1, 0, 0);
+			glRotated(RightArm, 1, 0, 0);
 			glTranslatef(0.0, -20, 0);
 			glColor3f(0.9f, 0.8f, 0.7f);
 			glutSolidSphere(5, 15, 15);
@@ -365,7 +370,7 @@ void character()//캐릭터
 		{
 			glPushMatrix();//어깨
 			glTranslatef(9.0, 58.0, 0);
-			glRotated(lArL, 1, 0, 0);
+			glRotated(LeftArm, 1, 0, 0);
 			glTranslatef(0.0, 0.0, 0);
 			glColor3f(0.9f, 0.3f, 0.3f);
 			glutSolidSphere(6.5, 15, 15);
@@ -373,7 +378,7 @@ void character()//캐릭터
 
 			glPushMatrix();//팔
 			glTranslatef(13.0, 53.0, 0);
-			glRotated(lArL, 1, 0, 0);
+			glRotated(LeftArm, 1, 0, 0);
 			glTranslatef(0.0, -10.0, 0);
 			glRotated(15, 0, 0, 1);
 			glScalef(1.0, 4.5, 1.0);
@@ -383,7 +388,7 @@ void character()//캐릭터
 
 			glPushMatrix();//손
 			glTranslatef(14.0, 50.0, 0);
-			glRotated(lArL, 1, 0, 0);
+			glRotated(LeftArm, 1, 0, 0);
 			glTranslatef(0.0, -20.0, 0);
 			glColor3f(0.9f, 0.8f, 0.7f);
 			glutSolidSphere(5, 15, 15);
@@ -410,19 +415,47 @@ void character()//캐릭터
 
 void shake()
 {
-	//왼쪽팔 오른쪽 다리
-	if (lArL <= 50 && p == 1) {
-		lArL += 12.5;
-		if (lArL == 50) {
+	//왼쪽팔
+	if (LeftArm <= 50 && p == 1) {
+		LeftArm += 12.5;
+		if (LeftArm == 50) {
 			p = 0;
 		}
 	}
-	if (lArL <= 50 && p == 0) {
-		lArL -= 12.5;
-		if (lArL == -50) {
+	if (LeftArm <= 50 && p == 0) {
+		LeftArm -= 12.5;
+		if (LeftArm == -50) {
 			p = 1;
 		}
 	}
+
+	//오른쪽팔
+	if (RightArm <= 50 && r== 1) {
+		RightArm -= 12.5;
+		if (RightArm == -50) {
+			r = 0;
+		}
+	}
+	if (RightArm <= 50 && r == 0) {
+		RightArm += 12.5;
+		if (RightArm == 50) {
+			r = 1;
+		}
+	}
+
+	if (Leg <= 50 && q== 1) {
+		Leg += 12.5;
+		if (Leg == 50) {
+			q = 0;
+		}
+	}
+	if (Leg <= 50 && q == 0) {
+		Leg -= 12.5;
+		if (Leg == -50) {
+			q = 1;
+		}
+	}
+
 }
 GLvoid Reshape(int w, int h)
 {
@@ -448,9 +481,16 @@ void TimerFunction(int value)
 	}
 
 	else if (move == FALSE) {
-		lArL = 0;
+		LeftArm = 0;
+		RightArm = 0;
+		Leg = 0;
 	}
 
+	if (makeSnow == TRUE) {
+		LeftArm = -60;
+		RightArm = -60;
+
+	}
 	glutPostRedisplay();
 	glutTimerFunc(80, TimerFunction, 1);
 }
@@ -518,6 +558,18 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'Z':
 		zRotation -= 3.0f;
 		break;
+	case VK_SPACE:
+		if (count % 2 == 0) {
+			makeSnow = TRUE;
+		}
+		if (count % 2 == 1) {
+			makeSnow = FALSE;
+		}
+		break;
+	}
+	count++;
+	if (count == 10) {
+		count = 0;
 	}
 	glutPostRedisplay();
 }
@@ -544,7 +596,7 @@ void KeyboardSpe(int key, int x, int y)//스페셜 키보드
 	case GLUT_KEY_DOWN:
 		move = TRUE;
 		direct = 0;
-		zPos+=1.5;
+		zPos += 1.5;
 		break;
 
 	}
