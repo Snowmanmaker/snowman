@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <time.h>
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 int snowNumber = 0;
 float snowObejct[200][3];
@@ -11,7 +10,7 @@ int makeboard[80][80];
 float xRotation = 0.0f, yRotation = 0.0f, zRotation = 0.0f;//로테이션
 float Xmove = 0.0f, Ymove = 0.0f, Zmove = 0.0f;
 int direct = 0;
-float xPos = 0, zPos = 0;
+float xPos = 0, zPos = -55;
 float LeftArm = 0;
 float RightArm = 0;
 float Leg = 0;
@@ -23,6 +22,7 @@ int q = 0;
 int t = 0;//space bar
 int u = 0;
 int kk = 0;
+int g = 0;
 BOOL move = FALSE;
 BOOL makeSnow = FALSE;
 BOOL camera = FALSE;
@@ -37,10 +37,10 @@ typedef struct makeSnow
 	float y;
 	float z;
 	float size;
+	BOOL life;
 };
 
 struct makeSnow Snow[8];
-
 
 void Light()
 {
@@ -78,7 +78,9 @@ void Light()
 
 void snowballrand()
 {
-
+	for (int i = 0; i < 8; i++) {
+		Snow[i].life = TRUE;
+	}
 	srand((unsigned)time(NULL));
 	int k = 0;
 	int sx = 0;
@@ -107,11 +109,13 @@ void snowball()
 {
 	for (int k = 0; k < 8; k++)
 	{
-		glPushMatrix();
-		glTranslated(Snow[k].x, 15 + Snow[k].y, Snow[k].z);
-		glColor3f(0.9f, 0.9f, 1.0f);
-		glutSolidSphere(10 + Snow[k].size, 20, 20);
-		glPopMatrix();
+		if (Snow[k].life == TRUE) {
+			glPushMatrix();
+			glTranslated(Snow[k].x, 15 + Snow[k].y, Snow[k].z);
+			glColor3f(0.95f, 0.95f, 1.0f);
+			glutSolidSphere(10 + Snow[k].size, 20, 20);
+			glPopMatrix();
+		}
 	}
 }
 
@@ -126,6 +130,7 @@ void SetupRC()//초기화
 		snowObejct[i][2] = rand() % (500 - (-500) + 1) + (-500);//x값
 	}
 }
+
 
 
 void checkSnow(float i, float j, int k)
@@ -144,7 +149,7 @@ void checkSnow(float i, float j, int k)
 		
 	}
 	if (makeboard[x][z] == 2) {
-		Snow[k].size = -10;
+		Snow[k].life = FALSE;
 		
 	}
 
@@ -171,44 +176,83 @@ void checkRiver()
 
 }
 
+void selectSnow()
+{
+	if (direct == 1)
+	{
+		Snow[kk].x = xPos;
+		Snow[kk].z = zPos - 24 - Snow[kk].size;
+	}
+	else if (direct == 2)
+	{
+		Snow[kk].x = xPos + 24 + Snow[kk].size;
+		Snow[kk].z = zPos;
+	}
+	else if (direct == 3)
+	{
+		Snow[kk].x = xPos - 24 - Snow[kk].size;
+		Snow[kk].z = zPos;
+	}
+	else if (direct == 0)
+	{
+		Snow[kk].x = xPos;
+		Snow[kk].z = zPos + 24 + Snow[kk].size;
+	}
+
+}
+
 
 void followSnow()
 {
-	for (int k = 0; k < 8; k++)
+	if (makeSnow == TRUE)
 	{
-		if (Snow[k].x - 30.0 - Snow[k].size <= xPos && Snow[k].x + 30.0 + Snow[k].size >= xPos && Snow[k].z - 30.0 - Snow[k].size <= zPos && Snow[k].z + 30.0 + Snow[k].size >= zPos)
+		for (int k = 0; k < 8; k++)
 		{
-
-			if (makeSnow == TRUE)
+			if (Snow[k].x - 30.0 - Snow[k].size <= xPos && Snow[k].x + 30.0 + Snow[k].size >= xPos &&   //캐릭터가 눈덩이 범위안에 들어오면
+				Snow[k].z - 30.0 - Snow[k].size <= zPos && Snow[k].z + 30.0 + Snow[k].size >= zPos)
 			{
-				
-				if (direct == 1)
-				{
-					Snow[k].x = xPos;
-					Snow[k].z = zPos - 24 - Snow[k].size;
-				}
-				else if (direct == 2)
-				{
-					Snow[k].x = xPos + 24 + Snow[k].size;
-					Snow[k].z = zPos;
-				}
-				else if (direct == 3)
-				{
-					Snow[k].x = xPos - 24 - Snow[k].size;
-					Snow[k].z = zPos;
-				}
-				else if (direct == 0)
-				{
-					Snow[k].x = xPos;
-					Snow[k].z = zPos + 24 + Snow[k].size;
-				}
-				checkSnow(Snow[k].x, Snow[k].z, k);
+
+				kk = k;
+				g = 1;
+
+			}
+		}
+	}
+	else if (makeSnow == FALSE)
+	{
+		g = 0;
+	}
+
+}
+
+void crash()
+{
+	for (int k = 0; k < 8; k++) {
+		if ((-290 < xPos&&-270 > xPos&&-230 < zPos&&-210 > zPos) ||
+			(150 < xPos && 170 > xPos&&-130 < zPos&&-110 > zPos) ||
+			(240 < xPos && 260 > xPos && 290 < zPos && 310 > zPos) ||
+			(-160 < xPos&&-140 > xPos && 210 < zPos && 230 > zPos) ||
+			(-210 < xPos&&-190 > xPos&&-310 < zPos&&-290 > zPos) ||
+			(-310 < xPos&&-290 > xPos && 290 < zPos && 310 > zPos) ||
+			(290 < xPos && 310 > xPos && 90 < zPos && 110 > zPos) ||
+			(140 < xPos && 160 > xPos && 340 < zPos && 360 > zPos)|| u==1) {			// 돌4
+
+			if (direct == 0) {
+
+				zPos -= 1.5;
+			}
+			if (direct == 1) {
+				zPos += 1.5;
+			}
+			if (direct == 2) {
+				xPos -= 1.5;
+			}
+			if (direct == 3) {
+				xPos += 1.5;
 			}
 		}
 	}
 }
-
-
 
 
 void snow()
@@ -242,7 +286,6 @@ void drop()
 		}
 	}
 }
-
 
 int Loadfile()
 {
@@ -542,6 +585,7 @@ void character()//캐릭터
 	glPopMatrix();
 }
 
+
 void shake()
 {
 	//왼쪽팔
@@ -586,6 +630,7 @@ void shake()
 	}
 
 }
+
 GLvoid Reshape(int w, int h)
 {
 	glViewport(0, 0, w, h);
@@ -629,7 +674,6 @@ void TimerFunction(int value)
 	glutTimerFunc(100, TimerFunction, 1);
 }
 
-
 void drawScene()
 {
 	glEnable(GL_DEPTH_TEST);
@@ -662,21 +706,25 @@ void drawScene()
 	drawStone(300.0, 10.0, 100.0, 7);
 	drawStone(150.0, 10.0, 350.0, 0);
 
+
 	//캐릭터
 	character();
 	snowball();
 	followSnow();
 	checkRiver();
 	Light();
+	crash();
+	if (g == 1)
+   {
+      selectSnow();
+      checkSnow(Snow[kk].x, Snow[kk].z, kk);  //땅 체크 후 크기 키우자
+   }
 	glPopMatrix();
+
 	glPopMatrix();
 
 	glutSwapBuffers();
 }
-
-
-
-
 
 void Keyboard(unsigned char key, int x, int y)
 {
@@ -737,80 +785,29 @@ void KeyboardSpe(int key, int x, int y)//스페셜 키보드
 	case GLUT_KEY_LEFT:
 		move = TRUE;
 		direct = 3;
-		if ((-290 < xPos&&-270 > xPos&&-230 < zPos&&-210 > zPos) ||
-			(150 < xPos&&170 > xPos&&-130 < zPos&&-110 > zPos)||
-			(240 < xPos&&260 > xPos&&290 < zPos&&310 > zPos)||
-			(-160 < xPos&&-140 > xPos&&210 < zPos&&230 > zPos)||
-			(-210 < xPos&&-190 > xPos&&-310 < zPos&&-290 > zPos)||
-			(-310 < xPos&&-290 > xPos&&290 < zPos&&310 > zPos)||
-			(290 < xPos&&310 > xPos&&90 < zPos&&110 > zPos)||
-			(140 < xPos&&160 > xPos&&340 < zPos&&360 > zPos)||u == 1)
-		{
-			xPos += 3;
-		}
-		else
-		{
-			xPos -= 1.5;
-		}
+		xPos -= 1.5;
 		
 		break;
 
 	case GLUT_KEY_UP:
 		move = TRUE;
 		direct = 1;
-		if ((-290 < xPos&&-270 > xPos&&-230 < zPos&&-210 > zPos) ||
-			(150 < xPos && 170 > xPos&&-130 < zPos&&-110 > zPos) ||
-			(240 < xPos && 260 > xPos && 290 < zPos && 310 > zPos) ||
-			(-160 < xPos&&-140 > xPos && 210 < zPos && 230 > zPos) ||
-			(-210 < xPos&&-190 > xPos&&-310 < zPos&&-290 > zPos) ||
-			(-310 < xPos&&-290 > xPos && 290 < zPos && 310 > zPos) ||
-			(290 < xPos && 310 > xPos && 90 < zPos && 110 > zPos) ||
-			(140 < xPos && 160 > xPos && 340 < zPos && 360 > zPos)||u==1)
-		{
-			zPos += 3;
-		}
-		else
-		{
-			zPos -= 1.5;
-		}
+
+		zPos -= 1.5;
+	
 		break;
 	case GLUT_KEY_RIGHT:
 		move = TRUE;
 		direct = 2;
-		if ((-290 < xPos&&-270 > xPos&&-230 < zPos&&-210 > zPos) ||
-			(150 < xPos && 170 > xPos&&-130 < zPos&&-110 > zPos) ||
-			(240 < xPos && 260 > xPos && 290 < zPos && 310 > zPos) ||
-			(-160 < xPos&&-140 > xPos && 210 < zPos && 230 > zPos) ||
-			(-210 < xPos&&-190 > xPos&&-310 < zPos&&-290 > zPos) ||
-			(-310 < xPos&&-290 > xPos && 290 < zPos && 310 > zPos) ||
-			(290 < xPos && 310 > xPos && 90 < zPos && 110 > zPos) ||
-			(140 < xPos && 160 > xPos && 340 < zPos && 360 > zPos)||u==1)
-		{
-			xPos += -3;
-		}
-		else
-		{
-			xPos += 1.5;
-		}
+	
+		xPos += 1.5;
+		
 		break;
 	case GLUT_KEY_DOWN:
 		move = TRUE;
 		direct = 0;
-		if ((-290 < xPos&&-270 > xPos&&-230 < zPos&&-210 > zPos) ||
-			(150 < xPos && 170 > xPos&&-130 < zPos&&-110 > zPos) ||
-			(240 < xPos && 260 > xPos && 290 < zPos && 310 > zPos) ||
-			(-160 < xPos&&-140 > xPos && 210 < zPos && 230 > zPos) ||
-			(-210 < xPos&&-190 > xPos&&-310 < zPos&&-290 > zPos) ||
-			(-310 < xPos&&-290 > xPos && 290 < zPos && 310 > zPos) ||
-			(290 < xPos && 310 > xPos && 90 < zPos && 110 > zPos) ||
-			(140 < xPos && 160 > xPos && 340 < zPos && 360 > zPos)||u==1)
-		{
-			zPos += -3;
-		}
-		else
-		{
-			zPos += 1.5;
-		}
+		zPos += 1.5;
+		
 		break;
 
 	}
