@@ -22,7 +22,7 @@ typedef struct makeSnow
 	float snowZ;
 };
 
-struct makeSnow makesnow[10];
+struct makeSnow makesnow[8];
 
 void snowballrand()
 {
@@ -31,7 +31,7 @@ void snowballrand()
 	int k = 0;
 	int sx = 0;
 	int sz = 0;
-	while (k != 10)
+	while (k != 8)
 	{
 		sx = (((rand() % 80) - 40) * 10);
 		sz = (((rand() % 80) - 40) * 10);
@@ -55,12 +55,12 @@ void snowballrand()
 
 void snowball()
 {
-	for (int k = 0; k < 10; k++)
+	for (int k = 0; k < 8; k++)
 	{
 		glPushMatrix();
-		glTranslated(makesnow[k].snowX, 10, makesnow[k].snowZ);
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glutSolidSphere(15, 20, 20);
+		glTranslated(makesnow[k].snowX, 13, makesnow[k].snowZ);
+		glColor3f(0.9f, 0.9f, 1.0f);
+		glutSolidSphere(10, 20, 20);
 		glPopMatrix();
 	}
 }
@@ -72,7 +72,7 @@ void SetupRC()//초기화
 	for (int i = 0; i < 200; ++i)
 	{
 		snowObejct[i][0] = rand() % (500 - (-500) + 1) + (-500);//x값
-		snowObejct[i][1] = rand() % 300;//y값
+		snowObejct[i][1] = rand() % 500;//y값
 		snowObejct[i][2] = rand() % (500 - (-500) + 1) + (-500);//x값
 	}
 }
@@ -85,7 +85,7 @@ void snow()
 		glColor3f(1.0f, 1.0f, 1.0f);//색상
 		glTranslatef(snowObejct[i][0], snowObejct[i][1], snowObejct[i][2]);//위치
 		//반지름, 높이, z축 분활개수, z축 방향
-		glutSolidSphere(3, 10, 10);
+		glutSolidSphere(2.5, 10, 10);
 		glPopMatrix();
 	}
 }
@@ -94,14 +94,14 @@ void drop()
 {
 	for (int i = 0; i < 200; ++i)
 	{
-		snowObejct[i][1] -= 1;
+		snowObejct[i][1] -= 1.5;
 	}
 	for (int i = 0; i < 200; ++i)
 	{
 		if (snowObejct[i][1] < -50)
 		{
 			snowObejct[i][0] = rand() % (500 - (-500) + 1) + (-500);//x값
-			snowObejct[i][1] = rand() % 300;//y값
+			snowObejct[i][1] = rand() %500;//y값
 			snowObejct[i][2] = rand() % (500 - (-500) + 1) + (-500);//x값
 			if (snowNumber < 1000)
 				snowNumber++;
@@ -452,7 +452,7 @@ void TimerFunction(int value)
 	}
 
 	glutPostRedisplay();
-	glutTimerFunc(100, TimerFunction, 1);
+	glutTimerFunc(80, TimerFunction, 1);
 }
 
 
