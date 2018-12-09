@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-
+#include <math.h>
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 int snowNumber = 0;
 float snowObejct[200][3];
@@ -37,10 +37,25 @@ typedef struct makeSnow
 	float y;
 	float z;
 	float size;
+	int man;
 	BOOL life;
 };
 
 struct makeSnow Snow[8];
+
+typedef struct makeSnow1
+{
+	float x;
+	float y;
+	float z;
+	float size;
+	int man;
+	BOOL life;
+};
+
+struct makeSnow1 SnowMan[8];
+
+
 
 void Light()
 {
@@ -73,6 +88,62 @@ void Light()
 
 		glEnable(GL_LIGHT0);
 		glEnable(GL_COLOR_MATERIAL);
+	}
+}
+
+void makeSnowman()
+{
+	for (int k = 0; k < 8; k++)
+	{
+		for (int j = k; j < 7; j++)
+		{
+			if (sqrt(((Snow[k].x-Snow[j+1].x)*(Snow[k].x - Snow[j + 1].x))+ ((Snow[k].z - Snow[j + 1].z)*(Snow[k].z - Snow[j + 1].z)))<=
+				(10+Snow[k].size+10+Snow[j+1].size) && Snow[k].man != 1 && Snow[j + 1].man != 1)
+			{
+				if (Snow[k].size >= 8 && Snow[j + 1].size >= 8 && Snow[j + 1].man != 1 && Snow[k].man != 1)
+				{
+					
+
+					SnowMan[k].x = Snow[k].x;
+					SnowMan[k].y = Snow[k].y;
+					SnowMan[k].z = Snow[k].z;
+					SnowMan[k].size = Snow[k].size;
+
+					SnowMan[j + 1].x = Snow[j + 1].x;
+					SnowMan[j + 1].y = Snow[j + 1].y;
+					SnowMan[j + 1].z = Snow[j + 1].z;
+					SnowMan[j + 1].size = Snow[j + 1].size;
+
+					Snow[k].life = FALSE;
+					Snow[j + 1].life = FALSE;
+					
+					glPushMatrix();//몸통
+					glTranslated(SnowMan[k].x, 15 + SnowMan[k].y+ SnowMan[k].size, SnowMan[k].z);
+					glColor3f(0.95f, 0.95f, 1.0f);
+					glutSolidSphere(10 + SnowMan[k].size, 20, 20);
+					glPopMatrix();
+
+					glPushMatrix();//대가리
+					glTranslated(SnowMan[k].x, 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size, SnowMan[k].z);
+					glColor3f(0.95f, 0.95f, 1.0f);
+					glutSolidSphere(10 + SnowMan[j+1].size, 20, 20);
+					glPopMatrix();
+
+					Snow[k].man = 1;
+					Snow[j + 1].man = 1;
+					
+				}
+				
+			}
+			else
+			{
+				Snow[k].man = 0;
+				Snow[j + 1].man = 0;
+			
+			}
+			
+		}
+		
 	}
 }
 
@@ -204,21 +275,21 @@ void selectSnow()
 
 void followSnow()
 {
-	if (makeSnow == TRUE)
-	{
+	
 		for (int k = 0; k < 8; k++)
 		{
 			if (Snow[k].x - 30.0 - Snow[k].size <= xPos && Snow[k].x + 30.0 + Snow[k].size >= xPos &&   //캐릭터가 눈덩이 범위안에 들어오면
 				Snow[k].z - 30.0 - Snow[k].size <= zPos && Snow[k].z + 30.0 + Snow[k].size >= zPos)
 			{
-
-				kk = k;
-				g = 1;
-
+				if (makeSnow == TRUE && Snow[k].man != 1)
+		        {
+					kk = k;
+					g = 1;
+				}
 			}
 		}
-	}
-	else if (makeSnow == FALSE)
+	
+	if (makeSnow == FALSE)
 	{
 		g = 0;
 	}
@@ -237,8 +308,7 @@ void crash()
 			(290 < xPos && 310 > xPos && 90 < zPos && 110 > zPos) ||
 			(140 < xPos && 160 > xPos && 340 < zPos && 360 > zPos)|| u==1) {			// 돌4
 
-			if (direct == 0) {
-
+			if (direct == 0) {				
 				zPos -= 1.5;
 			}
 			if (direct == 1) {
@@ -254,6 +324,24 @@ void crash()
 	}
 }
 
+void crashSnow()
+{
+	for (int k = 0; k < 8; k++)
+	{
+		if ((sqrt(((Snow[k].x + 280)*(Snow[k].x + 280)) + ((Snow[k].z + 220)*(Snow[k].z + 220))) <= (20 + Snow[k].size))||
+			(sqrt(((Snow[k].x - 160)*(Snow[k].x - 160)) + ((Snow[k].z + 120)*(Snow[k].z + 120))) <= (20 + Snow[k].size))||
+			(sqrt(((Snow[k].x - 250)*(Snow[k].x - 250)) + ((Snow[k].z - 300)*(Snow[k].z - 300))) <= (20 + Snow[k].size))||
+			(sqrt(((Snow[k].x + 150)*(Snow[k].x + 150)) + ((Snow[k].z - 220)*(Snow[k].z - 220))) <= (20 + Snow[k].size))||
+			(sqrt(((Snow[k].x + 200)*(Snow[k].x + 200)) + ((Snow[k].z + 300)*(Snow[k].z + 300))) <= (21 + Snow[k].size))||
+			(sqrt(((Snow[k].x + 300)*(Snow[k].x + 300)) + ((Snow[k].z - 300)*(Snow[k].z - 300))) <= (17 + Snow[k].size))||
+			(sqrt(((Snow[k].x - 300)*(Snow[k].x - 300)) + ((Snow[k].z - 100)*(Snow[k].z - 100))) <= (21 + Snow[k].size))||
+			(sqrt(((Snow[k].x - 150)*(Snow[k].x - 150)) + ((Snow[k].z - 350)*(Snow[k].z - 350))) <= (17 + Snow[k].size)))
+		{
+			Snow[k].size = (Snow[k].size/2);
+		}
+	}
+	
+}
 
 void snow()
 {
@@ -714,11 +802,13 @@ void drawScene()
 	checkRiver();
 	Light();
 	crash();
+	crashSnow();
 	if (g == 1)
    {
       selectSnow();
       checkSnow(Snow[kk].x, Snow[kk].z, kk);  //땅 체크 후 크기 키우자
    }
+	makeSnowman();
 	glPopMatrix();
 
 	glPopMatrix();
