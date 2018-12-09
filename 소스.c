@@ -75,11 +75,12 @@ void drawBitmapText(char *str, float x, float y, float z)
 
 void TYPE()
 {
+
 	for (int i = 0; i < 8; i++)
 	{
 		if (i < 4)
 		{
-			SnowMan[i].type = i;
+			SnowMan[i].type =i;
 		}
 		else if (i >= 4)
 		{
@@ -88,6 +89,41 @@ void TYPE()
 	}
 }
 
+void cloud(Cx,Cy,Cz)
+{
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(Cx,Cy,Cz );
+		glutSolidSphere(55, 50, 50);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(Cx+35, Cy, Cz);
+		glutSolidSphere(45, 50, 50);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(Cx - 35, Cy, Cz);
+		glutSolidSphere(45, 50, 50);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(Cx - 65, Cy, Cz);
+		glutSolidSphere(35, 50, 50);
+	}
+	glPopMatrix();
+
+}
 void Light()
 {
 	GLfloat AmbientLight[] = { ambientL, ambientL, ambientL, ambientL };//주변 조명
@@ -160,6 +196,14 @@ void santa(int k, int j)
 	glTranslated(SnowMan[k].x + ((10 + SnowMan[j + 1].size) / 2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z+ 6 + SnowMan[j + 1].size);
 	glColor3f(0.0f, 0.0f, 0.0f);
 	glutSolidSphere((10 + SnowMan[k].size) / 10, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//코
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x, 25 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z + 8 + SnowMan[j + 1].size+3);
+	glColor3f(7.0f, 0.5f, 0.0f);
+	glScalef(1.0, 1.0, 3.0);
+	glutSolidCone(((20 + SnowMan[k].size) / 2) / 6, 4, 10, 10);
 	glPopMatrix();
 	
 }
@@ -266,9 +310,16 @@ void teapotman(int k, int j)
 
 	glPushMatrix();//대가리
 	glTranslated(0, jump, 0);
-	glTranslated(SnowMan[k].x, 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2 + 6 + SnowMan[j + 1].size + ((10 + SnowMan[j + 1].size) / 2), SnowMan[k].z);
-	glColor3f(0.8f, 0.8f, 0.0f);
-	glutSolidTeapot(((10 + SnowMan[j + 1].size) / 2));
+	glTranslated(SnowMan[k].x, 32 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2 + 6 + SnowMan[j + 1].size + ((10 + SnowMan[j + 1].size) / 2), SnowMan[k].z);
+	glColor3f(0.7f, 0.3f, 0.3f);
+	glutSolidTeapot(((15 + SnowMan[j + 1].size) / 2));
+	glPopMatrix();
+
+	glPushMatrix();//코
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x, 25 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z + 8 + SnowMan[j + 1].size);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 8, 20, 20);
 	glPopMatrix();
 }
 
@@ -642,7 +693,7 @@ void board_maker()
 				glPushMatrix();
 				{
 					glColor3f(0.7f, 0.5f, 0.3f);
-					glTranslatef(-400.0 + 10 * j, 0.0, -400.0 + 10 * i);
+					glTranslatef(-400.0 + 10 * j, -10.0, -400.0 + 10 * i);
 					glutSolidCube(10);
 				}
 				glPopMatrix();
@@ -1007,7 +1058,7 @@ void drawScene()
 	if (camera == TRUE) {
 		gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0); // 카메라위치
 		glTranslatef(-xPos, 0, -zPos);
-		drawBitmapText("-0.5, -0.5", 0.0, 0.0, 150.0);// 지정한 좌표에 문자열 출력
+		drawBitmapText("HI", 0.0, 0.0, 150.0);// 지정한 좌표에 문자열 출력
 	}
 
 	glPushMatrix();
@@ -1030,6 +1081,9 @@ void drawScene()
 	drawStone(300.0, 10.0, 100.0, 7);
 	drawStone(150.0, 10.0, 350.0, 0);
 
+	cloud(100, 500, -500);
+
+	cloud(-300, 400, -500);
 
 	//캐릭터
 	character();
