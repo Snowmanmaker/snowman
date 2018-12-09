@@ -15,6 +15,7 @@ float LeftArm = 0;
 float RightArm = 0;
 float Leg = 0;
 int count = 0;
+int count1 = 0;
 int look = 0;
 int m = 1;
 int p = 1;
@@ -53,12 +54,39 @@ typedef struct makeSnow1
 	float z;
 	float size;
 	int man;
+	int type;
 	BOOL life;
 };
 
 struct makeSnow1 SnowMan[8];
 
+void drawBitmapText(char *str, float x, float y, float z)
+{
+	glRasterPos3f(x, y, z); //문자열이 그려질 위치 지정
 
+	while (*str)
+	{
+		//GLUT_BITMAP_TIMES_ROMAN_24 폰트를 사용하여 문자열을 그린다.
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *str);
+
+		str++;
+	}
+}
+
+void TYPE()
+{
+	for (int i = 0; i < 8; i++)
+	{
+		if (i < 4)
+		{
+			SnowMan[i].type = i;
+		}
+		else if (i >= 4)
+		{
+			SnowMan[i].type = i-4;
+		}
+	}
+}
 
 void Light()
 {
@@ -94,6 +122,193 @@ void Light()
 	}
 }
 
+void santa(int k, int j)
+{
+	glPushMatrix();
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x, 25 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2+ SnowMan[j + 1].size, SnowMan[k].z-10);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glRotated(-120, 1, 0, 0);
+	glScalef(1.0, 1.0, 2.0);
+	glutSolidCone(5+SnowMan[j + 1].size, 20, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//모자 방울
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x, 1.3*(27 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2+ SnowMan[j + 1].size), SnowMan[k].z-28);
+	glColor3f(1.0f, 0.9f, 0.9f);
+	glutSolidSphere((SnowMan[j + 1].size/3), 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//목도리
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x, 15 + SnowMan[k].y + SnowMan[k].size - 2+ 10 + SnowMan[k].size, SnowMan[k].z);
+	glRotated(90, 1, 0, 0);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glutSolidTorus(SnowMan[j + 1].size-5, SnowMan[j + 1].size-3, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//왼쪽 눈
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x-((10 + SnowMan[j + 1].size)/2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z+ 6 + SnowMan[j + 1].size);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glutSolidSphere((10 + SnowMan[k].size)/10, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//오른쪽 눈
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x + ((10 + SnowMan[j + 1].size) / 2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z+ 6 + SnowMan[j + 1].size);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 10, 20, 20);
+	glPopMatrix();
+	
+}
+
+void bear(int k, int j)
+{
+	glPushMatrix();
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x-((10 + SnowMan[j + 1].size)/2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2+ 10 + SnowMan[j + 1].size, SnowMan[k].z);
+	glColor3f(0.95f, 0.95f, 1.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 3, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x + ((10 + SnowMan[j + 1].size) / 2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2 + 10 + SnowMan[j + 1].size, SnowMan[k].z);
+	glColor3f(0.95f, 0.95f, 1.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 3, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x-(10 + SnowMan[k].size/2), 15 + SnowMan[k].y + SnowMan[k].size - 2+ (10 + SnowMan[k].size / 2), SnowMan[k].z);
+	glColor3f(0.95f, 0.95f, 1.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 3, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x + (10 + SnowMan[k].size / 2), 15 + SnowMan[k].y + SnowMan[k].size - 2 + (10 + SnowMan[k].size / 2), SnowMan[k].z);
+	glColor3f(0.95f, 0.95f, 1.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 3, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//왼쪽 눈
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x - ((10 + SnowMan[j + 1].size) / 2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z + 6 + SnowMan[j + 1].size);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 10, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//오른쪽 눈
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x + ((10 + SnowMan[j + 1].size) / 2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z + 6 + SnowMan[j + 1].size);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 10, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//코
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x , 25 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z + 8 + SnowMan[j + 1].size);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 8, 20, 20);
+	glPopMatrix();
+}
+
+void fourtop(int k, int j)
+{
+	glPushMatrix();//대가리
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x, 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2+ 8 + SnowMan[j + 1].size+ ((10 + SnowMan[j + 1].size) / 2), SnowMan[k].z);
+	glColor3f(0.95f, 0.95f, 1.0f);
+	glutSolidSphere(((10 + SnowMan[j + 1].size)/2), 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//왼쪽 눈
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x - (((10 + SnowMan[j + 1].size) / 2) / 2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2 + 8 + SnowMan[j + 1].size + ((10 + SnowMan[j + 1].size) / 2), SnowMan[k].z + ((10 + SnowMan[j + 1].size) / 2)-2);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glutSolidSphere(((10 + SnowMan[k].size)/2) / 8, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//오른쪽 눈
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x + (((10 + SnowMan[j + 1].size) / 2) / 2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2 + 8 + SnowMan[j + 1].size + ((10 + SnowMan[j + 1].size) / 2), SnowMan[k].z + ((10 + SnowMan[j + 1].size) / 2)-2);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glutSolidSphere(((10 + SnowMan[k].size) / 2) / 8, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//코
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x, 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2 + 6 + SnowMan[j + 1].size + ((10 + SnowMan[j + 1].size) / 2), SnowMan[k].z + ((10 + SnowMan[j + 1].size) / 2) - 2);
+	glColor3f(7.0f, 0.5f, 0.0f);
+	glScalef(1.0, 1.0, 3.0);
+	glutSolidCone(((10 + SnowMan[k].size) / 2)/6, 4, 10,10);
+	glPopMatrix();
+}
+
+void teapotman(int k, int j)
+{
+	glPushMatrix();//왼쪽 눈
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x - ((10 + SnowMan[j + 1].size) / 2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z + 6 + SnowMan[j + 1].size);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 10, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//오른쪽 눈
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x + ((10 + SnowMan[j + 1].size) / 2), 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z + 6 + SnowMan[j + 1].size);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glutSolidSphere((10 + SnowMan[k].size) / 10, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//대가리
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x, 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2 + 6 + SnowMan[j + 1].size + ((10 + SnowMan[j + 1].size) / 2), SnowMan[k].z);
+	glColor3f(0.8f, 0.8f, 0.0f);
+	glutSolidTeapot(((10 + SnowMan[j + 1].size) / 2));
+	glPopMatrix();
+}
+
+void SnowManPerfect(int k, int j)
+{
+	TYPE();
+	if (SnowMan[k].type == 0)
+	{
+		santa(k, j);
+	}
+	else if (SnowMan[k].type == 1)
+	{
+		bear(k, j);
+	}
+	else if (SnowMan[k].type == 2)
+	{
+		fourtop(k, j);
+	}
+	else if (SnowMan[k].type == 3)
+	{
+		teapotman(k, j);
+	}
+	
+	glPushMatrix();//몸통
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x, 15 + SnowMan[k].y + SnowMan[k].size - 2, SnowMan[k].z);
+	glColor3f(0.95f, 0.95f, 1.0f);
+	glutSolidSphere(10 + SnowMan[k].size, 20, 20);
+	glPopMatrix();
+
+	glPushMatrix();//대가리
+	glTranslated(0, jump, 0);
+	glTranslated(SnowMan[k].x, 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size - 2, SnowMan[k].z);
+	glColor3f(0.95f, 0.95f, 1.0f);
+	glutSolidSphere(10 + SnowMan[j + 1].size, 20, 20);
+	glPopMatrix();
+}
+
+
+
 void makeSnowman()
 {
 	for (int k = 0; k < 8; k++)
@@ -103,7 +318,7 @@ void makeSnowman()
 			if (sqrt(((Snow[k].x-Snow[j+1].x)*(Snow[k].x - Snow[j + 1].x))+ ((Snow[k].z - Snow[j + 1].z)*(Snow[k].z - Snow[j + 1].z)))<=
 				(10+Snow[k].size+10+Snow[j+1].size) && Snow[k].man != 1 && Snow[j + 1].man != 1)
 			{
-				if (Snow[k].size >= 8 && Snow[j + 1].size >= 8 && Snow[j + 1].man != 1 && Snow[k].man != 1)
+				if (Snow[k].size >= 3 && Snow[j + 1].size >= 3 && Snow[j + 1].man != 1 && Snow[k].man != 1)
 				{
 					
 
@@ -121,19 +336,18 @@ void makeSnowman()
 					Snow[j + 1].life = FALSE;
 					
 					snowjump = TRUE;
-					glPushMatrix();//몸통
-					glTranslated(0, jump, 0);
-					glTranslated(SnowMan[k].x, 15 + SnowMan[k].y+ SnowMan[k].size-2, SnowMan[k].z);
-					glColor3f(0.95f, 0.95f, 1.0f);
-					glutSolidSphere(10 + SnowMan[k].size, 20, 20);
-					glPopMatrix();
+					if (SnowMan[k].size > SnowMan[j + 1].size) {
+						SnowMan[k].size = SnowMan[k].size;
+					}
+					else {
+						float tmp;
+						tmp = SnowMan[k].size;
+						SnowMan[k].size = SnowMan[j + 1].size;
+						SnowMan[j + 1].size = tmp;
+					}
+					SnowManPerfect(k, j);
 
-					glPushMatrix();//대가리
-					glTranslated(0, jump, 0);
-					glTranslated(SnowMan[k].x, 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size-2, SnowMan[k].z);
-					glColor3f(0.95f, 0.95f, 1.0f);
-					glutSolidSphere(10 + SnowMan[j+1].size, 20, 20);
-					glPopMatrix();
+					
 
 					Snow[k].man = 1;
 					Snow[j + 1].man = 1;
@@ -152,6 +366,8 @@ void makeSnowman()
 		
 	}
 }
+
+
 
 void snowballrand()
 {
@@ -791,6 +1007,7 @@ void drawScene()
 	if (camera == TRUE) {
 		gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0); // 카메라위치
 		glTranslatef(-xPos, 0, -zPos);
+		drawBitmapText("-0.5, -0.5", 0.0, 0.0, 150.0);// 지정한 좌표에 문자열 출력
 	}
 
 	glPushMatrix();
