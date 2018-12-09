@@ -31,9 +31,12 @@ BOOL move = FALSE;
 BOOL makeSnow = FALSE;
 BOOL camera = FALSE;
 BOOL light = TRUE;
-float ambientL = 0.6f;
-float diffuseL = 0.2f;
+BOOL night = FALSE;
+float ambientL = 0.4f;
+float diffuseL = 0.5f;
 float specularL = 0.6f;
+float amPlus = 0;
+
 
 typedef struct makeSnow
 {
@@ -88,45 +91,73 @@ void TYPE()
 		}
 	}
 }
-
-void cloud(Cx,Cy,Cz)
+void cloud(Cx, Cy, Cz)
 {
 	glPushMatrix();
 	{
 		glColor3f(1.0, 1.0, 1.0);
-		glTranslatef(Cx,Cy,Cz );
-		glutSolidSphere(55, 50, 50);
+		glTranslatef(Cx, Cy, Cz - 10);
+		glutSolidSphere(50, 50, 50);
 	}
 	glPopMatrix();
 
 	glPushMatrix();
 	{
 		glColor3f(1.0, 1.0, 1.0);
-		glTranslatef(Cx+35, Cy, Cz);
-		glutSolidSphere(45, 50, 50);
+		glTranslatef(Cx - 70, Cy + 20, Cz - 10);
+		glutSolidSphere(40, 50, 50);
 	}
 	glPopMatrix();
 
 	glPushMatrix();
 	{
 		glColor3f(1.0, 1.0, 1.0);
-		glTranslatef(Cx - 35, Cy, Cz);
-		glutSolidSphere(45, 50, 50);
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glColor3f(1.0, 1.0, 1.0);
-		glTranslatef(Cx - 65, Cy, Cz);
+		glTranslatef(Cx - 70, Cy - 15, Cz);
 		glutSolidSphere(35, 50, 50);
 	}
 	glPopMatrix();
 
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(Cx - 40, Cy - 10, Cz + 5);
+		glutSolidSphere(40, 50, 50);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(Cx + 50, Cy - 5, Cz);
+		glutSolidSphere(30, 50, 50);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(Cx - 110, Cy - 10, Cz - 10);
+		glutSolidSphere(30, 50, 50);
+	}
+	glPopMatrix();
+
+
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(Cx - 30, Cy + 30, Cz);
+		glutSolidSphere(30, 50, 50);
+	}
+	glPopMatrix();
+
+
+
+
+
 }
 void Light()
 {
-	GLfloat AmbientLight[] = { ambientL, ambientL, ambientL, ambientL };//주변 조명
+	GLfloat AmbientLight[] = { ambientL+amPlus, ambientL + amPlus, ambientL, ambientL };//주변 조명
 	GLfloat DiffuseLight[] = { diffuseL, diffuseL, diffuseL, diffuseL };//산란 반사 조명
 	GLfloat SpecularLight[] = { specularL, specularL, specularL, specularL };//거울반사 조명
 	GLfloat lightPos[] = { 230, 440, 300, 1 };
@@ -357,8 +388,6 @@ void SnowManPerfect(int k, int j)
 	glutSolidSphere(10 + SnowMan[j + 1].size, 20, 20);
 	glPopMatrix();
 }
-
-
 
 void makeSnowman()
 {
@@ -702,7 +731,7 @@ void board_maker()
 			{
 				glPushMatrix();
 				{
-					glColor3f(0.0f, 0.0f, 1.0f);
+					glColor3f(0.0f, 0.2f, 1.0f);
 					glTranslatef(-400.0 + 10 * j, -20.0, -400.0 + 10 * i);
 					glutSolidCube(10);
 				}
@@ -739,7 +768,23 @@ void drawTree(float Tx, float Ty, float Tz)
 	// 조명
 
 	glPushMatrix();
-	glColor3f(1.0f, 0.2f, 0.2f);
+	if (count1 == 0)
+	{
+		glColor3f(0.94f, 0.12f, 0.47f);
+	}
+	else if (count1 == 1)
+	{
+		glColor3f(0.94f, 0.59f, 0.47f);
+	}
+	else if (count1 == 2)
+	{
+		glColor3f(0.94f, 0.94f, 0.47f);
+	}
+	else if (count1 == 3)
+	{
+		glColor3f(0.35f, 0.94f, 0.47f);
+	}
+
 	glTranslatef(Tx, Ty + 80, Tz);
 	glutSolidSphere(8.0, 50, 24);
 	glPopMatrix();
@@ -773,6 +818,7 @@ void drawStone(float Sx, float Sy, float Sz, float Ssize)//돌
 
 	glPopMatrix();
 }
+
 
 void character()//캐릭터
 {
@@ -1010,6 +1056,19 @@ GLvoid Reshape(int w, int h)
 	glMatrixMode(GL_MODELVIEW);
 
 }
+void TimerFunction1(int value)
+{
+	if (count1 < 4)
+	{
+		count1++;
+	}
+	else
+	{
+		count1 = 0;
+	}
+	glutPostRedisplay();
+	glutTimerFunc(1000, TimerFunction1, 1);
+}
 
 void TimerFunction(int value)
 {
@@ -1051,7 +1110,12 @@ void TimerFunction(int value)
 void drawScene()
 {
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.0f, 0.6f, 1.0f, 0.0f);
+	if (night == TRUE) {
+		glClearColor(0.0f, 0.2f, 0.4f, 0.0f);
+	}
+	else if (night == FALSE) {
+		glClearColor(0.0f, 0.5f, 1.0f, 0.0f);
+	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
 
@@ -1069,6 +1133,7 @@ void drawScene()
 	Loadfile();
 	board_maker();
 	snow();//눈
+
 	// 나무
 	drawTree(-280.0, 120.0, -220.0);
 	drawTree(160.0, 120.0, -120.0);
@@ -1084,6 +1149,8 @@ void drawScene()
 	cloud(100, 500, -500);
 
 	cloud(-300, 400, -500);
+
+	cloud(400, 400, -500);
 
 	//캐릭터
 	character();
@@ -1135,6 +1202,17 @@ void Keyboard(unsigned char key, int x, int y)
 		if (look % 2 == 1) {
 			camera = FALSE;
 		}
+		break;
+
+	case 'n':
+		amPlus -= 0.45;
+		specularL = 0.1;
+		night = TRUE;
+		break;
+	case 'm':
+		amPlus = 0.0;
+		specularL = 0.4f;
+		night = FALSE;
 		break;
 
 	case VK_SPACE:
@@ -1207,6 +1285,7 @@ void main(int argc, char *argv[])
 	glutSpecialFunc(KeyboardSpe);//키보드 스페셜
 	glutDisplayFunc(drawScene);
 	glutTimerFunc(100, TimerFunction, 1);
+	glutTimerFunc(100, TimerFunction1, 1);
 	glutReshapeFunc(Reshape);
 	SetupRC();//초기화
 	glutMainLoop();
