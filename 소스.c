@@ -16,6 +16,7 @@ float RightArm = 0;
 float Leg = 0;
 int count = 0;
 int look = 0;
+int m = 1;
 int p = 1;
 int r = 1;
 int q = 0;
@@ -23,6 +24,8 @@ int t = 0;//space bar
 int u = 0;
 int kk = 0;
 int g = 0;
+float jump=0;
+BOOL snowjump = FALSE;
 BOOL move = FALSE;
 BOOL makeSnow = FALSE;
 BOOL camera = FALSE;
@@ -117,14 +120,17 @@ void makeSnowman()
 					Snow[k].life = FALSE;
 					Snow[j + 1].life = FALSE;
 					
+					snowjump = TRUE;
 					glPushMatrix();//몸통
-					glTranslated(SnowMan[k].x, 15 + SnowMan[k].y+ SnowMan[k].size, SnowMan[k].z);
+					glTranslated(0, jump, 0);
+					glTranslated(SnowMan[k].x, 15 + SnowMan[k].y+ SnowMan[k].size-2, SnowMan[k].z);
 					glColor3f(0.95f, 0.95f, 1.0f);
 					glutSolidSphere(10 + SnowMan[k].size, 20, 20);
 					glPopMatrix();
 
 					glPushMatrix();//대가리
-					glTranslated(SnowMan[k].x, 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size, SnowMan[k].z);
+					glTranslated(0, jump, 0);
+					glTranslated(SnowMan[k].x, 28 + SnowMan[k].y + SnowMan[k].size + SnowMan[k].size + SnowMan[j + 1].size-2, SnowMan[k].z);
 					glColor3f(0.95f, 0.95f, 1.0f);
 					glutSolidSphere(10 + SnowMan[j+1].size, 20, 20);
 					glPopMatrix();
@@ -360,7 +366,7 @@ void drop()
 {
 	for (int i = 0; i < 200; ++i)
 	{
-		snowObejct[i][1] -= 1.5;
+		snowObejct[i][1] -= 3.0;
 	}
 	for (int i = 0; i < 200; ++i)
 	{
@@ -758,6 +764,19 @@ void TimerFunction(int value)
 		RightArm = -60;
 
 	}
+
+	if (snowjump == TRUE) {
+		if (jump <= 20 && m == 1) {
+			jump += 4;			
+			if (jump == 20)
+				m = 0;
+		}
+		if (jump <= 20 && m == 0) {
+			jump -= 4;
+			if (jump == -4)
+				m = 1;
+		}
+	}
 	glutPostRedisplay();
 	glutTimerFunc(100, TimerFunction, 1);
 }
@@ -875,7 +894,7 @@ void KeyboardSpe(int key, int x, int y)//스페셜 키보드
 	case GLUT_KEY_LEFT:
 		move = TRUE;
 		direct = 3;
-		xPos -= 1.5;
+		xPos -= 2.0;
 		
 		break;
 
@@ -883,20 +902,20 @@ void KeyboardSpe(int key, int x, int y)//스페셜 키보드
 		move = TRUE;
 		direct = 1;
 
-		zPos -= 1.5;
+		zPos -= 2.0;
 	
 		break;
 	case GLUT_KEY_RIGHT:
 		move = TRUE;
 		direct = 2;
 	
-		xPos += 1.5;
+		xPos += 2.0;
 		
 		break;
 	case GLUT_KEY_DOWN:
 		move = TRUE;
 		direct = 0;
-		zPos += 1.5;
+		zPos += 2.0;
 		
 		break;
 
